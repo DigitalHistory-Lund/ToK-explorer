@@ -16,7 +16,6 @@ execute:
 
 ```{python}
 #| scrolled: true
-from pyparlaclarin.read import paragraph_iterator, speeches_with_name
 from pyriksdagen.utils import protocol_iterators, download_corpus
 
 from pathlib import Path
@@ -24,9 +23,6 @@ from queue import Queue
 from lxml import etree
 from tqdm.auto import tqdm
 
-import progressbar
-import pyriksdagen
-import ipywidgets
 
 import plotly.offline as pyo
 import plotly.graph_objs as go
@@ -165,11 +161,6 @@ def extract_all_utterances(protocols):
     yield from process_root_queue(q)
 ```
 
-```{python}
-all_utterances = []
-for utterance in tqdm(extract_all_utterances(protocols), total=701_218): #total=5273785):
-    all_utterances.append(utterance)
-```
 
 ```{python}
 from itertools import islice
@@ -185,543 +176,6 @@ def batched(iterable, n, *, strict=False):
 ```
 
 ```{python}
-tmp_db = './tmp.db'
-if os.path.exists(tmp_db):
-    os.unlink(tmp_db)
-
-with sqlite3.connect(tmp_db) as conn:
-    cur = conn.cursor()
-    cur.execute('CREATE TABLE utterance (id str primary key, prev text, next text, who text, year int, date int, gender text, party text)')
-    # cur.execute("PRAGMA compile_options LIKE '%SQLITE_ENABLE_FTS5%';")
-    cur.execute('CREATE VIRTUAL TABLE utterance_fts USING fts5(id, content)')
-    cur.execute('CREATE VIRTUAL TABLE reverse_utterance_fts USING fts5(id, content)')
-
-    cur.execute('CREATE TABLE affiliation (who text, start int, end int, party text)')
-
-    cur.execute('CREATE index next_index on utterance(next)')
-    cur.execute('CREATE index prev_index on utterance(prev)')
-    cur.execute('CREATE index who_index on utterance(who)')
-    cur.execute('CREATE index year_index on utterance(year)')
-
-    cur.executemany('INSERT INTO affiliation (who, start, end, party) values (?,?,?,?)', load_person_dates_affiliation())
-    cur.execute('CREATE index aff_index on affiliation(who)')
-
-
-    data = []
-    for batch in tqdm(batched(all_utterances, 50_000), total=len(all_utterances)//50_000):
-        data = [
-            {'id':u_id,
-             'prev':prev,
-             'next':nxt,
-             'content':text,
-             'reverse_content':text[::-1],
-             'who':who,
-             'year':year,
-             'gender': id_to_gender[who],
-             'date' : id_to_intdate[u_id]
-            } for u_id, prev, nxt, text, who, year in batch]
-
-        cur.executemany('INSERT INTO utterance_fts (id, content) values (:id, :content)', data)
-        cur.executemany('INSERT INTO reverse_utterance_fts (id, content) values (:id, :reverse_content)', data)
-        cur.executemany('INSERT INTO utterance (id, prev, next, who, year, gender, date) values (:id, :prev, :next, :who, :year, :gender, :date)', data)
-
-        conn.commit()
-
-    # TODO: Add speaker metadata
-    cur.execute("""
-    UPDATE utterance
-    SET party = (
-        SELECT party
-        FROM affiliation
-        WHERE utterance.who = affiliation.who
-          AND date BETWEEN start AND end
-    )
-    WHERE EXISTS (
-        SELECT 1
-        FROM affiliation
-        WHERE utterance.who = affiliation.who
-          AND date BETWEEN start AND end
-    )
-    """)
-```
-
-```{python}
-
-term_counter = Counter()
-
-with sqlite3.connect(tmp_db) as conn:
-    cur = conn.cursor()
-
-
-    print(cur.execute('select count(*) from utterance_fts where content match "kvinna AND kvinnor"').fetchall())
-    print(cur.execute('select count(*) from utterance_fts where content match "kvinna"').fetchall())
-    print(cur.execute('select count(*) from utterance_fts where content match "kvinnor"').fetchall())
-    print(cur.execute('select count(*) from utterance_fts where content match "kvinna OR kvinnor"').fetchall())
-    print(cur.execute('select count(*) from utterance_fts where content match "kvinn*"').fetchall())
-```
-
-```{python}
-def get_found_words(pattern):
-    out_file = './ord/' + pattern +'.csv'
-    out_file = Path(out_file.replace(' ', '_'))
-    out_file.parent.mkdir(exist_ok = True, parents=True)
-
-
-    if not out_file.exists():
-
-        with sqlite3.connect(tmp_db) as conn:
-            cur = conn.cursor()
-
-            if not pattern.startswith('*'):
-                term_counter = Counter((re.sub('[^a-zåäö ]', '', token.lower()) for content in cur.execute(f'select content from utterance_fts where content match "{pattern}"')
-                    for token in content[0].split() if token.lower().startswith(pattern.replace('*', ''))))
-            else:
-                reverse_pattern = pattern[::-1]
-                term_counter = Counter((re.sub('[^a-zåäö ]', '', token.lower()[::-1]) for content in cur.execute(f'select content from reverse_utterance_fts where content match "{reverse_pattern}"')
-                    for token in content[0].split() if token.lower().startswith(reverse_pattern.replace('*', ''))))
-
-        with open(out_file, 'x', encoding='utf8') as f:
-            f.write('word , count\n')
-            for term, count in term_counter.most_common():
-                f.write(str(term) + ' , ' + str(count) + '\n')
-
-get_found_words('fru*')
-get_found_words('*änka')
-get_found_words('*kvinna')
-get_found_words('*fru')
-get_found_words('*dotter')
-get_found_words('*arbeterska')
-
-###
-get_found_words("adelsjungfru")
-get_found_words("adelskvinna")
-get_found_words("ägaränka")
-get_found_words("ägardotter")
-get_found_words("ägareänka")
-get_found_words("ägaredotter")
-get_found_words("ägarefru")
-get_found_words("ägarehustru")
-get_found_words("ägaremor")
-get_found_words("ägarhustru")
-get_found_words("ägarinna")
-get_found_words("ägarinnamor")
-get_found_words("aktieägarinna")
-get_found_words("åldermanänkefru")
-get_found_words("åldermandotter")
-get_found_words("åldermansänka")
-get_found_words("amerikaarbetarehustru")
-get_found_words("amerikahustru")
-get_found_words("änkebaronessa")
-get_found_words("änkefriherrinna")
-get_found_words("änkegrevinna")
-get_found_words("änkehjälptagerska")
-get_found_words("änkemadam")
-get_found_words("anknyterska")
-get_found_words("arkitektänka")
-get_found_words("arkitektdotter")
-get_found_words("arkitekthustru")
-get_found_words("arkitektsänka")
-get_found_words("assistentänka")
-get_found_words("assistenthustru")
-get_found_words("assistentsänka")
-get_found_words("avbyterska")
-get_found_words("baptisthustru")
-get_found_words("barnhemsflicka")
-get_found_words("barnhusflickan")
-get_found_words("baronänka")
-get_found_words("baronänkefru")
-get_found_words("baronessa")
-get_found_words("baronetenka")
-get_found_words("baronfru")
-get_found_words("bettlerska")
-get_found_words("bibelkvinnohemelev")
-get_found_words("biträdesänka")
-get_found_words("biträdesdotter")
-get_found_words("biträdeshustru")
-get_found_words("boendeänka")
-get_found_words("boningshusägarinna")
-get_found_words("borgaränka")
-get_found_words("borgardotter")
-get_found_words("borgareänka")
-get_found_words("borgaredotter")
-get_found_words("borgareenka")
-get_found_words("borgarefru")
-get_found_words("borgarehustru")
-get_found_words("borgarenka")
-get_found_words("borgensänka")
-get_found_words("bostadshusegarinna")
-get_found_words("bruksingenjörsänka")
-get_found_words("bruksingenjörshustru")
-get_found_words("byråingenjörsänka")
-get_found_words("concubin")
-get_found_words("dalflicka")
-get_found_words("dalgumma")
-get_found_words("dalkarlsänka")
-get_found_words("dalkulla")
-get_found_words("dannemanänka")
-get_found_words("dannemandotter")
-get_found_words("delägarinna änka")
-get_found_words("delegarinna i herrhamra")
-get_found_words("demois")
-get_found_words("demoiselle")
-get_found_words("diversehemarbeterska")
-get_found_words("doktoränka")
-get_found_words("doktorhustru")
-get_found_words("doktorsänka")
-get_found_words("egaredotter")
-get_found_words("egareenka")
-get_found_words("egarinna")
-get_found_words("egarinna af enemossen")
-get_found_words("egethemsägarinna")
-get_found_words("egnahemägarinna")
-get_found_words("emigranthustru")
-get_found_words("enkefriherinna")
-get_found_words("enkefriherrinna")
-get_found_words("enkefru")
-# get_found_words("enkefru, fattighjon")
-# get_found_words("enkefru, undantag")
-get_found_words("enkegrefvinna")
-get_found_words("familjevärdinna")
-get_found_words("fästekvinna")
-get_found_words("fastighetsägaränka")
-get_found_words("fastighetsägareänka")
-get_found_words("fastighetsägarehustru")
-get_found_words("fastighetsägarhustru")
-get_found_words("fastighetsägarinna")
-get_found_words("fastighetsägerska")
-get_found_words("fastighetsäginna")
-get_found_words("fastighetsegarinna")
-get_found_words("fastighetsegerska")
-get_found_words("fästningsänka")
-get_found_words("fästningsfånghustru")
-get_found_words("fattigänka")
-get_found_words("fattigdelsinnehavarinna")
-get_found_words("fattigdelstagerska")
-get_found_words("fattigenka")
-get_found_words("fattigflicka")
-get_found_words("fattighjonänka")
-get_found_words("fattighjondotter")
-get_found_words("fattighjonsänka")
-get_found_words("fattighjonsdotter")
-get_found_words("fattighjonsenka")
-get_found_words("fattighjonshustru")
-get_found_words("fattighusänka")
-get_found_words("fattigkvinna")
-get_found_words("fattigstugegumma")
-get_found_words("fattigunderstödstagareänka")
-get_found_words("fattigunderstödstagerska")
-get_found_words("fattigvårdsunderstödstagerska")
-get_found_words("fideikommissarieänka")
-get_found_words("fjällappänka")
-get_found_words("fjällappdotter")
-get_found_words("fjällappflicka")
-get_found_words("fjällappsänka")
-get_found_words("fjällhustru")
-get_found_words("fjällkvinna")
-get_found_words("fjällmanänka")
-get_found_words("fjällmandotter")
-get_found_words("fjällmanflicka")
-get_found_words("fjällmanhustru")
-get_found_words("fjelllappenka")
-get_found_words("flickskoleelev")
-get_found_words("föderådsenka")
-get_found_words("födomålstagerska")
-get_found_words("födorådsänka")
-get_found_words("födorådsenka")
-get_found_words("födorådskvinna")
-get_found_words("födorådskvinnan")
-get_found_words("födorådsmanhustru")
-get_found_words("födorådsqvinna")
-get_found_words("födorådstagaränka")
-get_found_words("födorådstagareänka")
-get_found_words("födorådstagareenka")
-get_found_words("födorådstagarehustru")
-get_found_words("födorådstagarenka")
-get_found_words("födorådstagarinna")
-get_found_words("födorådstagerka")
-get_found_words("födoradstagerska")
-get_found_words("födorådstagerska")
-get_found_words("födorådstagsänka")
-get_found_words("födorådstagsenka")
-get_found_words("födorådstagska")
-get_found_words("födordstagerska")
-get_found_words("födotagerska")
-get_found_words("födovårdstagerska")
-get_found_words("födtagerska")
-get_found_words("förådstagerska")
-get_found_words("fördelshafverska")
-get_found_words("fördelshaverska")
-get_found_words("fördelstagarinna")
-get_found_words("fördorådstagerska")
-get_found_words("föredelstagerska")
-get_found_words("förgångtagerska")
-get_found_words("förmånstastagerska")
-get_found_words("förrådsstagerska")
-get_found_words("förrådstagarinna")
-get_found_words("förrådstagenka")
-get_found_words("förrådstagerska")
-get_found_words("förrådtagerska")
-get_found_words("försörjningstagerska")
-get_found_words("fosterbarnsvårdarinna")
-get_found_words("fosterdotter")
-get_found_words("frälsemandotter")
-get_found_words("frigrevinna")
-get_found_words("friherreänka")
-get_found_words("friherrehustru")
-get_found_words("friherrinna")
-get_found_words("frimurarmansänka")
-get_found_words("fru grefvinna")
-get_found_words("furstinna")
-get_found_words("gårdsmamsell")
-get_found_words("gesällhustru")
-get_found_words("grevinna")
-get_found_words("hemarbeterska")
-get_found_words("hemmadotter")
-get_found_words("hemsysslerska")
-get_found_words("herrinna")
-get_found_words("hertiginna")
-get_found_words("hovarkitektänka")
-get_found_words("hovarkitektdotter")
-get_found_words("husägareänka")
-get_found_words("husägarinna")
-get_found_words("husägerska")
-get_found_words("husbondeänka")
-get_found_words("husbondehustru")
-get_found_words("husegarehustru")
-get_found_words("husegarinna")
-get_found_words("huskvinna")
-get_found_words("husqvinna")
-get_found_words("idkerska")
-get_found_words("ingeniörsenka")
-get_found_words("ingeniörsfru")
-get_found_words("ingenjörsarbetarehustru")
-get_found_words("ingenjörsdotter")
-get_found_words("ingenjörshustru")
-get_found_words("ingenjörska")
-get_found_words("inhyserska")
-get_found_words("inhysesänka")
-get_found_words("inhysesenka")
-get_found_words("inhyseshustru")
-get_found_words("inhysesmor")
-get_found_words("inhysestagerska")
-get_found_words("inkomsttagerska")
-get_found_words("innehafvarinna")
-get_found_words("innehafverska")
-get_found_words("innehavarinna")
-get_found_words("instruktörsingenjörsänka")
-get_found_words("kandidatänka")
-get_found_words("kandidathustru")
-get_found_words("kandidatsänka")
-get_found_words("kemibiträdesdotter")
-get_found_words("kemistänka")
-get_found_words("kennelinnehavarinna")
-get_found_words("konkubin")
-get_found_words("kringdriverska")
-get_found_words("kringstrykande qvinfolk")
-get_found_words("kringstrykerska")
-get_found_words("kringvandrerska")
-get_found_words("kronokärring")
-get_found_words("kronprinsess*")
-get_found_words("kulla")
-get_found_words("kvinnsperson")
-get_found_words("laborationspiga")
-get_found_words("laboratoriearbeterska")
-get_found_words("laboratoriebiträdesänka")
-get_found_words("laboratorieföreståndarinna")
-get_found_words("laboratoripiga")
-get_found_words("laboratris")
-get_found_words("landstrykerska")
-get_found_words("landunderstödstagerska")
-get_found_words("lappenka")
-get_found_words("levebrödstagerska")
-get_found_words("livbrödstagerska")
-get_found_words("livräntetagerska")
-get_found_words("lordänka")
-get_found_words("lösdrifverska")
-get_found_words("lösdrifverskan")
-get_found_words("lösdriverska kringstrykande")
-get_found_words("lufferska")
-get_found_words("madam")
-get_found_words("madame")
-get_found_words("mademoiselle")
-get_found_words("magisterhustru")
-get_found_words("maka")
-get_found_words("mamsell")
-get_found_words("markisinna")
-get_found_words("matrona")
-get_found_words("medaljös")
-get_found_words("medhjälparinna")
-get_found_words("meteorologföreståndarinna")
-get_found_words("nomadänka")
-get_found_words("nykterhetsidkerska")
-get_found_words("nykterhetsrörelseidkerska")
-get_found_words("överceremonimästarinna")
-get_found_words("överingenjörsänka")
-get_found_words("överkandidatänka")
-get_found_words("pensionsinnehafvarinna")
-get_found_words("pensionsinnehavarinna")
-get_found_words("pensionslärarinna")
-get_found_words("pensionstagarinna")
-get_found_words("pensionstagerska")
-get_found_words("pensiontagerska")
-get_found_words("prinsess*")
-get_found_words("privatunderstödstagerska")
-# get_found_words("ränte-tagerska")
-get_found_words("räntetagarinna")
-get_found_words("ränteupptagerska")
-get_found_words("realstudenska")
-get_found_words("rentiére")
-get_found_words("seminarierska")
-get_found_words("seminarinna")
-get_found_words("självförsörjerska")
-get_found_words("sjelfförsörjerska")
-get_found_words("sjukhuslaboratris")
-get_found_words("sköka")
-get_found_words("skolemor")
-get_found_words("skrikegumma")
-get_found_words("sockengumma")
-get_found_words("sockenmanhustru")
-get_found_words("stadsfröken")
-get_found_words("stadsgeologsänka")
-get_found_words("stadsingenjörhustru")
-get_found_words("stadsingenjörsänka")
-get_found_words("sterbhus delegarinna")
-get_found_words("sterbhusandelägerska")
-get_found_words("sterbhusdelägarinna")
-get_found_words("sterbhusdelägerska")
-get_found_words("sterbhusdeläginna")
-get_found_words("sterbhusdelegarinna")
-get_found_words("sterbhusföreståndarinna")
-get_found_words("stiftfröken")
-get_found_words("stiftsfröken")
-get_found_words("studentska")
-get_found_words("studerska")
-get_found_words("stugägarinna")
-get_found_words("stugägerska")
-get_found_words("stuguägarinna")
-get_found_words("stuguegarinna")
-get_found_words("stuguegerska")
-get_found_words("tatterska")
-get_found_words("tiggerska")
-get_found_words("tingshusägarina")
-get_found_words("tomtägarinna")
-get_found_words("tomtägerska")
-get_found_words("tomtegarinna")
-get_found_words("trafikchefsingenjörsänka")
-get_found_words("trasfröken")
-# get_found_words("und.tagsenka")
-get_found_words("undantagaredotter")
-get_found_words("undantagarinna")
-get_found_words("undantagerska")
-get_found_words("undantaghustru")
-get_found_words("undantagsägarhustru")
-get_found_words("undantagsägerska")
-get_found_words("undantagsbesittarinna")
-get_found_words("undantagsdotter")
-get_found_words("undantagsflicka")
-get_found_words("undantagsfru")
-get_found_words("undantagsgumma")
-get_found_words("undantagshaverska")
-get_found_words("undantagshjon")
-get_found_words("undantagshjondotter")
-get_found_words("undantagshjonsänka")
-get_found_words("undantagshjonshustru")
-get_found_words("undantagshustru")
-get_found_words("undantagshustrun")
-get_found_words("undantagsinnehafverska")
-get_found_words("undantagsinnehavarinna")
-get_found_words("undantagsjungfru")
-get_found_words("undantagskvinna")
-get_found_words("undantagsmaka")
-get_found_words("undantagsmanänka")
-get_found_words("undantagsmansdotter")
-get_found_words("undantagsmansenka")
-get_found_words("undantagsmanshustru")
-get_found_words("undantagsmor")
-get_found_words("undantagstagaerska")
-get_found_words("undantagstagareänka")
-get_found_words("undantagstagarinna")
-get_found_words("undantagstagerska")
-get_found_words("undantagstagsänka")
-get_found_words("underhållstagareänka")
-get_found_words("underhållstagerska")
-get_found_words("underingenjörsänka")
-get_found_words("understöderska")
-get_found_words("understödstagareänka")
-get_found_words("understödstagaredotter")
-get_found_words("understödstagarehustru")
-get_found_words("understödstagarinna")
-get_found_words("understödstagerska")
-get_found_words("understödstagerska hustru frånskild")
-get_found_words("undtagerska")
-get_found_words("ungersvenhustru")
-get_found_words("upperska")
-get_found_words("vandraredotter")
-get_found_words("vandringskvinna")
-get_found_words("vårdtagarinna")
-get_found_words("värsyster")
-get_found_words("villaägarinna")
-```
-
-```{python}
-
-get_found_words("barnavårdarinna")
-get_found_words("barnmorska")
-get_found_words("diakonissa")
-get_found_words("epidimisjuksköterska")
-get_found_words("fattigdiakonissa")
-get_found_words("förestånderska")
-get_found_words("förestånderska")
-get_found_words("husförestånderska")
-get_found_words("hushållerska")
-get_found_words("husvärdinna")
-get_found_words("sjuksköterska")
-get_found_words("sköterska")
-get_found_words("städerska")
-get_found_words("tjänarinna")
-get_found_words("vaccinatris")
-```
-
-
-```{python}
-def get_timeline(match_pattern: str) -> List[Tuple[int, int]]:
-    with sqlite3.connect(tmp_db) as conn:
-        cur = conn.cursor()
-
-        return cur.execute(f'select year, count(*) from utterance as u join utterance_fts as uf on u.rowid == uf.rowid where content match "{match_pattern}" group by year').fetchall()
-
-
-def get_baseline():
-    with sqlite3.connect(tmp_db) as conn:
-        cur = conn.cursor()
-
-        return {x:y for x,y in cur.execute(f'select year, count(*) from utterance as u join utterance_fts as uf on u.rowid == uf.rowid group by year').fetchall()}
-baseline = get_baseline()
-```
-
-```{python}
-def get_or_timeline(keywords : List[str]) -> List[Tuple[int, int]]:
-    pattern = ' OR '.join(keywords)
-    return get_timeline(pattern)
-```
-
-```{python}
-kvinn = get_timeline('kvinn*')
-kvinna = get_timeline('kvinna')
-korv = get_timeline('korv')
-```
-
-```{python}
-def make_line(timeline, name):
-    x,y = zip(*timeline)
-    total = sum(y)
-    name_with_count = f'{name} ({total:,})'
-    yy = [y1/baseline[x1] for x1,y1 in timeline]
-    assert len(y) == len(yy)
-    return go.Scatter(mode='lines', x=x, y=y, name=name_with_count), go.Scatter(mode='lines', x=x, y=yy, name=name_with_count)
-```
-
-```{python}
 pyo.init_notebook_mode(connected=False)
 ```
 
@@ -734,288 +188,13 @@ def enable_plotly_in_cell():
   init_notebook_mode(connected=False)
 ```
 
-
-## Establishing baselines
-
-```{python}
-with sqlite3.connect(tmp_db) as conn:
-    cur = conn.cursor()
-
-    line, r = make_line(cur.execute('select year, count(*) from utterance group by year order by year').fetchall(), 'total')
-
-
-pyo.iplot({'data' : [line,],
-            'layout':{
-                'title':{
-                    'text': 'Number of utterances per year',
-                    'xanchor': 'center',
-                    'x':0.5
-                }, }})
-```
-
-```{python}
-with sqlite3.connect(tmp_db) as conn:
-    cur = conn.cursor()
-
-    line, r = make_line(cur.execute('select year, sum(length(uf.content)) from utterance as u join utterance_fts as uf on u.rowid == uf.rowid group by year order by year').fetchall(), 'total')
-
-pyo.iplot({'data' : [line],
-            'layout':{
-                'title':{
-                    'text': 'Number of characters per year',
-                    'xanchor': 'center',
-                    'x':0.5
-                }, }})
-```
-
-```{python}
-with sqlite3.connect(tmp_db) as conn:
-    cur = conn.cursor()
-
-    line, r = make_line(cur.execute(
-        '''
-        select
-          year,
-          sum(
-            length(uf.content) -
-            length(
-              replace(
-                replace(
-                  replace(
-                    uf.content,
-                    " ",
-                    ""
-                  ),
-                  "\t",
-                  ""
-                ),
-              "\n",
-              ""
-              )
-            )
-          )
-        from
-          utterance as u
-        join
-          utterance_fts as uf
-          on
-            u.rowid == uf.rowid
-        group by
-          year
-        order by
-          year
-        ''').fetchall(), 'total')
-
-
-pyo.iplot({'data' : [line,],
-            'layout':{
-                'title':{
-                    'text': 'Number of words per year',
-                    'xanchor': 'center',
-                    'x':0.5
-                }, }})
-```
-
-```{python}
-with sqlite3.connect(tmp_db) as conn:
-    cur = conn.cursor()
-
-    line, r = make_line(cur.execute('select year, count(distinct who) from utterance group by year order by year').fetchall(), 'total')
-
-
-pyo.iplot({'data' : [line,],
-            'layout':{
-                'title':{
-                    'text': 'Number of speakers per year',
-                    'xanchor': 'center',
-                    'x':0.5
-                }, }})
-```
-
-```{python}
-from itertools import pairwise
-from collections import defaultdict
-
-def speakers():
-  with sqlite3.connect(tmp_db) as conn:
-    cur = conn.cursor()
-
-    mapper = defaultdict(int)
-
-    for (year_old, who_old), (year_new, who_new) in pairwise([(None, None)] + list(cur.execute('select year, who from utterance group by year, id order by date').fetchall())):
-      if who_old != who_new or year_old != year_new:
-        mapper[year_new] += 1
-
-  return sorted(mapper.items())
-
-
-
-line, r = make_line(speakers(), 'total')
-
-pyo.iplot({'data' : [line,],
-            'layout':{
-                'title':{
-                    'text': 'Number of cohesive utterances per year',
-                    'xanchor': 'center',
-                    'x':0.5
-                }, }})
-```
-
-```{python}
-def speechy():
-  with sqlite3.connect(tmp_db) as conn:
-    cur = conn.cursor()
-
-    for old, new in pairwise([(None,None,None,)] + cur.execute('select year, uf.content, who from utterance as u join utterance_fts as uf on u.rowid == uf.rowid group by year, u.id').fetchall() + [(None,None,None,)]):
-      if None in new:
-        break
-      yield new[0], new[1]
-      continue
-      if old[0] is None:
-        content = new[1]
-        continue
-
-      if new[2] == old[2] and new[2] != 'unknown':
-        content += ' ' + new[1]
-        continue
-
-      if new[0] is None:
-        yield (old[0], content)
-        break
-
-      if new[2] != old[2] or new[2] == 'unknown' or old[2] == 'unknown':
-        yield (old[0], content)
-        content = new[1]
-
-
-def utt_lens():
-
-    mapper = defaultdict(list)
-
-    for (year, utt) in list(speechy()):
-      utt_len = len(utt.split())
-      if utt_len < 50:
-        print(f'Skipping one-word utterance in year {year}: "{utt}"')
-        continue
-      if utt_len > 1000:
-        print(f'Skipping very long utterance in year {year}: "{utt}..." ({utt_len} words)')
-        continue
-      mapper[year].append(utt_len)
-
-    mins = {year: min(lengths) for year, lengths in mapper.items()}
-    maxs = {year: max(lengths) for year, lengths in mapper.items()}
-    avgs = {year: sum(lengths)/len(lengths) for year, lengths in mapper.items()}
-    stds = {year: (sum((l - avgs[year])**2 for l in lengths)/len(lengths))**0.5 for year, lengths in mapper.items()}
-    sdt1 = {year: avgs[year] + stds[year] for year in mapper.keys()}
-    sdt2 = {year: avgs[year] - stds[year] for year in mapper.keys()}
-    return sorted(avgs.items()), sorted(mins.items()), sorted(maxs.items()), sorted(sdt1.items()), sorted(sdt2.items())
-
-
-avgs, mins, maxs, std1, std2 = utt_lens()
-avgl, r = make_line(avgs, 'mean')
-minl, r = make_line(mins, 'mins')
-maxl, r = make_line(maxs, 'max')
-st1l, r = make_line(std1, 'std+1')
-st2l, r = make_line(std2, 'std-1')
-
-
-pyo.iplot({'data' : [avgl, minl, maxl, st1l, st2l],
-            'layout':{
-                'title':{
-                    'text': 'Number of speakers per year',
-                    'xanchor': 'center',
-                    'x':0.5
-                }, }})
-```
-
-```{python}
-import pandas as pd
-
-
-def make_lark():
-  lark = defaultdict(int)
-  yc = defaultdict(int)
-
-  for yr, utt in speechy():
-    utt_len = len(utt.split())
-    lark[(yr, utt_len)] += 1
-
-
-
-  for (yr, utt_len), count in lark.items():
-    yield {'x':yr, 'y':utt_len, 'z':count}
-
-df = pd.DataFrame.from_records(list(make_lark()))
-```
-
-```{python}
-import plotly.express as px
-fig = px.density_heatmap(df, x="x", y="y", marginal_x="histogram", marginal_y="histogram")
-fig.show()
-```
-
-
-
 ```{python}
 from collections import defaultdict
-
-def speakers():
-  with sqlite3.connect(tmp_db) as conn:
-    cur = conn.cursor()
-
-    mapper = defaultdict(int)
-
-    for (year_old, who_old), (year_new, who_new) in pairwise([(None, None)] + list(cur.execute('select year, who from utterance group by year, id order by date').fetchall())):
-      if who_old != who_new or year_old != year_new:
-        mapper[year_new] += 1
-
-  return sorted(mapper.items())
-
-
-
-line, r = make_line(speakers(), 'total')
-
-pyo.iplot({'data' : [line,],
-            'layout':{
-                'title':{
-                    'text': 'Number of speakers per year',
-                    'xanchor': 'center',
-                    'x':0.5
-                }, }})
 ```
 
 ## Looking at incidence of keyword groups
 
 ```{python}
-enable_plotly_in_cell()
-"""
-    The first element is the name of the line -- what shows up in the legend of the plot.
-        "Name" : ['search', 'terms', 'in', 'any', 'order'],
-        "Name" : ['also', 'called', 'keywords'],
-    The second element is a `list` of searchterms.
-
-    Note that the `name` and `keywords` / `search terms` are in quotes:
-        '
-        "
-    You can use either, but they have to match:
-       "This is a valid string"
-       'This is another valid string'
-       "but this will not work'
-
-    In the list (denoted by square brackets "[]") commas "," separate different items in the list.
-        ['one', 'two' "three"] == ["one", 'twothree']
-
-    The comma at the end of the lines " ], " are used to differentiate between the different lines.
-
-    You can easily easily add more lines by simply copy-pasting a line: just put the cursor in a line without selecting anything and cmd + c -> cmd + v
-
-    Press the 'play' button in the top-left corner of this cell to re-run all the queries and create new oli
-"""
-
-
-#
-#   Edit the below and run cell (shift + enter) to update plot
-#
 
 queries = {
     "kvinna" : ['kvinna'],
@@ -1087,178 +266,397 @@ queries = {
 #
 #   Edit the above and run cell (shift + enter) to update plot
 #
+```
 
-## Remove potential duplicates
-for key, words in queries.items():
-    queries[key] = list(set(word.strip().lower() for word in words))
+# Relative word frequencies
 
-## aggregate
-q2 = {'All used keywords.' : list(set(word for name, words in queries.items() for word in words))}
-for key, item in queries.items():
-    q2[key] = item
+Since the annual number of utterances shift greatly between 1919 and 1920
+-- whereas the number uttered words remains fairly stable -- we need to look
+at relative word frequencies instead.
 
-## Make and split absolute and relative lines
-all_pairs = [make_line(get_or_timeline(keywords), name) for name, keywords in q2.items()]
-lines, rels = zip(*all_pairs)
+```{python}
+rel_db = './rel.dn'
+if not os.path.exists(rel_db):
 
-pyo.iplot({'data' : list(lines),
-            'layout':{
+  all_utterances = list(  tqdm(extract_all_utterances(protocols), total=701_218))
+
+  with sqlite3.connect(rel_db) as conn:
+      cur = conn.cursor()
+      cur.execute('CREATE TABLE utterance (id str primary key, prev text, next text, who text, year int, date int, gender text, party text)')
+      # cur.execute("PRAGMA compile_options LIKE '%SQLITE_ENABLE_FTS5%';")
+
+
+
+      cur.execute('CREATE TABLE affiliation (who text, start int, end int, party text)')
+
+      cur.execute('CREATE index next_index on utterance(next)')
+      cur.execute('CREATE index who_index on utterance(who)')
+      cur.execute('CREATE index year_index on utterance(year)')
+
+      cur.executemany('INSERT INTO affiliation (who, start, end, party) values (?,?,?,?)', load_person_dates_affiliation())
+      cur.execute('CREATE index aff_index on affiliation(who)')
+
+      cur.execute('CREATE table word (id integer primary key autoincrement, utterance_id, word text, kvinna int, kvinna1 int , kvinna2 int, kvinna3 int)')
+      cur.execute('CREATE index word_index_word on word(word)')
+
+      cur.execute('CREATE index word_index_utteranceid on word(utterance_id)')
+
+      data = []
+      for batch in tqdm(batched(all_utterances, 50_000), total=len(all_utterances)//50_000):
+          data = [
+              {'id':u_id,
+              'prev':prev,
+              'next':nxt,
+              'content':text,
+              'reverse_content':text[::-1],
+              'who':who,
+              'year':year,
+              'gender': id_to_gender[who],
+              'date' : id_to_intdate[u_id]
+              } for u_id, prev, nxt, text, who, year in batch]
+
+          cur.executemany('INSERT INTO utterance (id, prev, next, who, year, gender, date) values (:id, :prev, :next, :who, :year, :gender, :date)', data)
+
+          word_data = [{'utterance_id': d['id'], 'word': word} for d in data for word in d['content'].split()]
+          cur.executemany('INSERT INTO word (utterance_id, word) values (:utterance_id, :word)', word_data)
+
+          conn.commit()
+
+      # TODO: Add speaker metadata
+      cur.execute("""
+      UPDATE utterance
+      SET party = (
+          SELECT party
+          FROM affiliation
+          WHERE utterance.who = affiliation.who
+            AND date BETWEEN start AND end
+      )
+      WHERE EXISTS (
+          SELECT 1
+          FROM affiliation
+          WHERE utterance.who = affiliation.who
+            AND date BETWEEN start AND end
+      )
+      """)
+
+      for key, patterns in tqdm(queries.items(), desc='Tagging relevant words'):
+          col_name = key.replace(' ','').lower()
+          for pattern in patterns:
+              pattern = pattern.replace('*', '%')
+              cur.execute(f'''
+              UPDATE word
+              SET {col_name} = 1
+              WHERE word like ?
+              ''', (pattern,))
+
+
+      # Table for baseline w/ indexi
+      cur.execute('CREATE table baseline (id integer primary key autoincrement, who text, year int, gender text, party text, count int, kvinna int, kvinna1, int, kvinna2 int, kvinna3 int)')
+      cur.execute('CREATE index baseline_ygp_index on baseline(year, gender, party)')
+      cur.execute('CREATE index baseline_gp_index on baseline(gender, party)')
+      cur.execute('CREATE index baseline_yp_index on baseline(year, party)')
+      cur.execute('CREATE index baseline_yg_index on baseline(year, gender)')
+      cur.execute('CREATE index baseline_y_index on baseline(year)')
+      cur.execute('CREATE index baseline_g_index on baseline(gender)')
+      cur.execute('CREATE index baseline_p_index on baseline(party)')
+
+      """
+      select who, year, gender, party, count(*), sum from utterance as u join word as w on u.id == w.utterance_id group by who, year, gender, party
+
+
+      """
+
+      cur.execute('''
+      INSERT INTO baseline (who, year, gender, party, count, kvinna, kvinna1, kvinna2, kvinna3)
+      SELECT who, year, gender, party, count(*), sum(kvinna), sum(kvinna1), sum(kvinna2), sum(kvinna3)
+      FROM utterance AS u
+      JOIN word AS w ON u.id = w.utterance_id
+      GROUP BY who, year, gender, party
+      ''')
+      conn.commit()
+```
+
+```{python}
+"""
+First, let's recreate the decomposition on utterance level per year
+to make sure that the methodology is sound.
+"""
+
+with sqlite3.connect(rel_db) as conn:
+    cur = conn.cursor()
+    cur.execute(
+    """
+    select year, sum(uc), sum(k), sum(k1), sum(k2), sum(k3) from
+      (
+      select
+        year,
+        1 as uc ,
+        max(kvinna) as k,
+        max(kvinna1) as k1,
+        max(kvinna2) as k2,
+        max(kvinna3) as k3
+      from
+        utterance as u
+      join
+        word as w
+      on
+        u.id == w.utterance_id
+      group by
+        year,
+        utterance_id
+      )
+    group by year
+    """)
+    results = cur.fetchall()
+    x, y_uc, y_k, y_k1, y_k2, y_k3 = zip(*results)
+    lines = [go.Scatter(mode='lines', x=x, y=y_uc, name='utterance count'),
+             go.Scatter(mode='lines', x=x, y=y_k, name='kvinna'),
+             go.Scatter(mode='lines', x=x, y=y_k1, name='kvinna1'),
+             go.Scatter(mode='lines', x=x, y=y_k2, name='kvinna2'),
+             go.Scatter(mode='lines', x=x, y=y_k3, name='kvinna3'),
+            ]
+    pyo.iplot({
+        'data':lines,
+                    'layout':{
                 'title':{
-                    'text': 'Counting Utterances with different keyword compositions.',
+                    'text': 'Sanity check: Recreating the "Counting Utterances with different keyword compositions."',
                     'xanchor': 'center',
                     'x':0.5
                 }, }})
-pyo.iplot({'data' : list(rels),
-            'layout':{
+```
+
+```{python}
+# Perfect.
+
+"""
+Now we can recreate it with word frequencies and relative word frequencies.
+"""
+
+with sqlite3.connect(rel_db) as conn:
+    cur = conn.cursor()
+    cur.execute(
+    """
+      select
+        year,
+        sum(b.count) as uc,
+        sum(kvinna) as k,
+        cast(sum(kvinna )as real)/ sum(b.count) as kr,
+        sum(kvinna1) as k1,
+        cast(sum(kvinna1) as real)/ sum(b.count) as k1r,
+        sum(kvinna2) as k2,
+        cast(sum(kvinna2) as real)/ sum(b.count) as k2r,
+        sum(kvinna3) as k3,
+        cast(sum(kvinna3) as real)/ sum(b.count) as k3r
+      from
+        baseline as b
+      group by
+        year
+    """)
+    results = cur.fetchall()
+    x, y_uc, y_k,y_kr, y_k1, y_k1r, y_k2,y_k2r, y_k3, y_k3r = zip(*results)
+    lines = [
+            go.Scatter(mode='lines', x=x, y=y_uc, name='word count'),
+             go.Scatter(mode='lines', x=x, y=y_k, name='kvinna'),
+             go.Scatter(mode='lines', x=x, y=y_k1, name='kvinna1'),
+             go.Scatter(mode='lines', x=x, y=y_k2, name='kvinna2'),
+             go.Scatter(mode='lines', x=x, y=y_k3, name='kvinna3'),
+            ]
+    pyo.iplot({
+        'data':lines,
+                              'layout':{
                 'title':{
-                    'text': 'Relative Counts of Utterances with different keyword compositions.',
+                    'text': 'Counting keywords by category.',
                     'xanchor': 'center',
                     'x':0.5
-                }, }})
+                }, }}
+    )
 
-
-
-
-## Write used words to files.
-for word in q2[list(q2.keys())[0]]:
-    get_found_words(word)
+    lines = [
+             go.Scatter(mode='lines', x=x, y=y_kr, name='kvinna'),
+             go.Scatter(mode='lines', x=x, y=y_k1r, name='kvinna1'),
+             go.Scatter(mode='lines', x=x, y=y_k2r, name='kvinna2'),
+             go.Scatter(mode='lines', x=x, y=y_k3r, name='kvinna3'),
+            ]
+    pyo.iplot({
+        'data':lines,
+                              'layout':{
+                'title':{
+                    'text': 'Relative keyword frequencies by category.',
+                    'xanchor': 'center',
+                    'x':0.5
+                }, }}
+    )
 ```
 
-## Looking at utterances by keywords and gender
-
 ```{python}
-def gen_lines(pattern='kvinna'):
-    with sqlite3.connect(tmp_db) as conn:
+# Interesting that no big differences show up here.
+"Let's add the gender dimension."
+with sqlite3.connect(rel_db) as conn:
+    cur = conn.cursor()
+    cur.execute(
+    """
+      select
+        year,
+        gender,
+        sum(b.count) as uc,
+        sum(kvinna) as k,
+        cast(sum(kvinna )as real)/ sum(b.count) as kr,
+        sum(kvinna1) as k1,
+        cast(sum(kvinna1) as real)/ sum(b.count) as k1r,
+        sum(kvinna2) as k2,
+        cast(sum(kvinna2) as real)/ sum(b.count) as k2r,
+        sum(kvinna3) as k3,
+        cast(sum(kvinna3) as real)/ sum(b.count) as k3r
+      from
+        baseline as b
+      where gender is not null
+      group by
+        year, gender
+      order by year, gender
+    """)
+    results = cur.fetchall()
 
-        cur = conn.cursor()
-
-        genders = [ans[0] for ans in cur.execute('select distinct gender from utterance')]
-
-        for gender in genders:
-            ark = cur.execute(f'select year, count(*) from utterance as u join utterance_fts as uf on u.rowid == uf.rowid where gender == "{gender}" and content match "{pattern}" group by year').fetchall()
-            if ark == []:
-                continue
-            x,y = zip(*ark)
-            total = sum(y)
-            name_with_count = f'{gender} ({total:,})'
-            yield go.Scatter(mode='lines', x=x, y=y, name=name_with_count)
+    by_gender = defaultdict(list)
+    for row in results:
+        year, gender, *values = row
+        by_gender[gender].append((year, *values))
 
 
+    lines = []
+    relines = []
+    for gender, data in by_gender.items():
 
-for name, keywords in q2.items():
-    pattern = ' OR '.join(keywords)
-    herk = list(gen_lines(pattern))
-    pyo.iplot({'data' : herk,
-           'layout':{
-               'title':{
-                   'text': f"keywords category '{name}' by Gender of utterer.",
-                   'xanchor': 'center',
-                   'x':0.5
-               }, }})
+        x, y_uc, y_k,y_kr, y_k1, y_k1r, y_k2,y_k2r, y_k3, y_k3r = zip(*data)
+
+
+        lines += [
+              go.Scatter(mode='lines', x=x, y=y_uc, name=f'{gender}: word count'),
+              go.Scatter(mode='lines', x=x, y=y_k, name=f'{gender}: kvinna'),
+              go.Scatter(mode='lines', x=x, y=y_k1, name=f'{gender}: kvinna1'),
+              go.Scatter(mode='lines', x=x, y=y_k2, name=f'{gender}: kvinna2'),
+              go.Scatter(mode='lines', x=x, y=y_k3, name=f'{gender}: kvinna3'),
+              ]
+
+        relines += [
+              go.Scatter(mode='lines', x=x, y=y_kr, name=f'{gender}: kvinna'),
+              go.Scatter(mode='lines', x=x, y=y_k1r, name=f'{gender}: kvinna1'),
+              go.Scatter(mode='lines', x=x, y=y_k2r, name=f'{gender}: kvinna2'),
+              go.Scatter(mode='lines', x=x, y=y_k3r, name=f'{gender}: kvinna3'),
+              ]
+
+    pyo.iplot({
+        'data':lines
+    ,
+                              'layout':{
+                'title':{
+                    'text': 'Counting keyword categories by gender.',
+                    'xanchor': 'center',
+                    'x':0.5
+                }, }}
+    )
+    pyo.iplot({
+        'data':relines,
+                              'layout':{
+                'title':{
+                    'text': 'Relative keyword categories frequencies by gender.',
+                    'xanchor': 'center',
+                    'x':0.5
+                }, }}
+    )
 ```
 
-## Looking at utterances by keywords and party
-
 ```{python}
-def party_lines(pattern='kvinna'):
-    with sqlite3.connect(tmp_db) as conn:
+# Big difference here. Interesting.
+# Interesting that no big differences show up here.
+"Let's add the party dimension."
+with sqlite3.connect(rel_db) as conn:
+    cur = conn.cursor()
+    cur.execute(
+    """
+      select
+        year,
+        party,
+        sum(b.count) as uc,
+        sum(kvinna) as k,
+        cast(sum(kvinna )as real)/ sum(b.count) as kr,
+        sum(kvinna1) as k1,
+        cast(sum(kvinna1) as real)/ sum(b.count) as k1r,
+        sum(kvinna2) as k2,
+        cast(sum(kvinna2) as real)/ sum(b.count) as k2r,
+        sum(kvinna3) as k3,
+        cast(sum(kvinna3) as real)/ sum(b.count) as k3r
+      from
+        baseline as b
+      where party is not null
+      group by
+        year, party
+      order by year, party
+    """)
+    results = cur.fetchall()
 
-        cur = conn.cursor()
-
-        parties = [ans[0] for ans in cur.execute('select distinct party from utterance')]
-
-        for party in parties:
-            ark = cur.execute(f'select year, count(*) from utterance as u join utterance_fts as uf on u.rowid == uf.rowid where party == "{party}" and content match "{pattern}" group by year').fetchall()
-            if ark == []:
-                continue
-            x,y = zip(*ark)
-            total = sum(y)
-            name_with_count = f'{party} ({total:,})'
-            yield go.Scatter(mode='lines', x=x, y=y, name=name_with_count)
+    by_party = defaultdict(list)
+    for row in results:
+        year, party, *values = row
+        by_party[party].append((year, *values))
 
 
-for name, keywords in q2.items():
-    pattern = ' OR '.join(keywords)
-    herk = list(party_lines(pattern))
-    pyo.iplot({'data' : herk,
-           'layout':{
-               'title':{
-                   'text': f"keywords category '{name}' by Party of utterer.",
-                   'xanchor': 'center',
-                   'x':0.5
-               }, }})
+    k = []
+    k1 = []
+    k2 = []
+    k3 = []
+    for party, data in by_party.items():
+
+        x, y_uc, y_k,y_kr, y_k1, y_k1r, y_k2,y_k2r, y_k3, y_k3r = zip(*data)
+
+
+
+        k.append(go.Scatter(mode='lines', x=x, y=y_kr, name=f'{party}'),)
+        k1.append(go.Scatter(mode='lines', x=x, y=y_k1r, name=f'{party}'),)
+        k2.append(go.Scatter(mode='lines', x=x, y=y_k2r, name=f'{party}'),)
+        k3.append(go.Scatter(mode='lines', x=x, y=y_k3r, name=f'{party}'),)
+
+
+    pyo.iplot({
+        'data':k    ,
+        'layout':{
+                'title':{
+                    'text': 'Relative frequencies of "kvinna" by party',
+                    'xanchor': 'center',
+                    'x':0.5
+                }, }}
+    )
+    pyo.iplot({
+        'data':k1    ,
+        'layout':{
+                'title':{
+                    'text': 'Relative frequencies of "kvinna 1" by party',
+                    'xanchor': 'center',
+                    'x':0.5
+                }, }}
+    )
+    pyo.iplot({
+        'data':k2    ,
+        'layout':{
+                'title':{
+                    'text': 'Relative frequencies of "kvinna 2" by party',
+                    'xanchor': 'center',
+                    'x':0.5
+                }, }}
+    )
+    pyo.iplot({
+        'data':k3    ,
+        'layout':{
+                'title':{
+                    'text': 'Relative frequencies of "kvinna 3" by party',
+                    'xanchor': 'center',
+                    'x':0.5
+                }, }}
+    )
 ```
 
-## Looking at number of speakers with utterances containing keywords, by gender
-
 ```{python}
-def speaker_gender_lines(pattern='kvinna'):
-    with sqlite3.connect(tmp_db) as conn:
-
-        cur = conn.cursor()
-
-        genders = [ans[0] for ans in cur.execute('select distinct gender from utterance')]
-
-        for gender in genders:
-            ark = cur.execute(f'select year, count(distinct who) from utterance as u join utterance_fts as uf on u.rowid == uf.rowid where gender == "{gender}" and content match "{pattern}" group by year').fetchall()
-            if ark == []:
-                continue
-            x,y = zip(*ark)
-            total = sum(y)
-            name_with_count = f'{gender} ({total:,})'
-            yield go.Scatter(mode='lines', x=x, y=y, name=name_with_count)
-
-for name, keywords in q2.items():
-    pattern = ' OR '.join(keywords)
-    herk = list(speaker_gender_lines(pattern))
-    pyo.iplot({'data' : herk,
-           'layout':{
-               'title':{
-                   'text': f"Speakers with utterances in keywords category '{name}' by Gender of utterer.",
-
-                   'xanchor': 'center',
-                   'x':0.5
-               }, }})
-```
-
-## Looking at number of speakers with utterances containing keywords, by party
-
-```{python}
-def speaker_party_lines(pattern='kvinna'):
-    with sqlite3.connect(tmp_db) as conn:
-
-        cur = conn.cursor()
-
-        parties = [ans[0] for ans in cur.execute('select distinct party from utterance')]
-
-        for party in parties:
-            ark = cur.execute(f'select year, count(distinct who) from utterance as u join utterance_fts as uf on u.rowid == uf.rowid where party == "{party}" and content match "{pattern}" group by year').fetchall()
-            if ark == []:
-                continue
-            x,y = zip(*ark)
-            total = sum(y)
-            name_with_count = f'{party} ({total:,})'
-            yield go.Scatter(mode='lines', x=x, y=y, name=name_with_count)
-
-
-for name, keywords in q2.items():
-    pattern = ' OR '.join(keywords)
-    herk = list(speaker_party_lines(pattern))
-    pyo.iplot({'data' : herk,
-           'layout':{
-               'title':{
-                   'text': f"Speakers with utterances in keywords category '{name}' by Party of utterer.",
-
-                   'xanchor': 'center',
-                   'x':0.5
-               }, }})
-```
-
-## Utterances by gender, party and decade
-
-```{python}
-def speaker_gender_lines(pattern='kvinna', lower=1900, upper=1940):
-    with sqlite3.connect(tmp_db) as conn:
+def boxes(lower=1900, upper=1940):
+    with sqlite3.connect(rel_db) as conn:
 
         cur = conn.cursor()
 
@@ -1266,31 +664,41 @@ def speaker_gender_lines(pattern='kvinna', lower=1900, upper=1940):
 
         for gender in genders:
             ark = cur.execute(
-                f'select party, count(*) as c from utterance as u join utterance_fts as uf on u.rowid == uf.rowid where gender == "{gender}" and content match "{pattern}" and year between {lower} and {upper} group by who order by c desc').fetchall()
+                f"""select who, party,
+        cast(sum(kvinna )as real)/ sum(b.count) as kr,
+        cast(sum(kvinna1) as real)/ sum(b.count) as k1r,
+        cast(sum(kvinna2) as real)/ sum(b.count) as k2r,
+        cast(sum(kvinna3) as real)/ sum(b.count) as k3r
+        from baseline as b
+        where gender == "{gender}" and year between {lower} and {upper} group by who
+                """).fetchall()
             if ark == []:
                 continue
 
-            x,y = zip(*ark)
-            # total = sum(y)
-            # name_with_count = 'a'#, #f'{p} ({total:,})'
-            yield go.Bar(x=x, y=y,
-                        #  name=name_with_count
-                         )
+            who, x, yk, yk1, yk2, yk3 = zip(*ark)
+            yield go.Bar(x=x, y=yk), go.Bar(x=x, y=yk1), go.Bar(x=x, y=yk2), go.Bar(x=x, y=yk3)
 
 years = list(range(1900, 1941, 10))
 full = [(1900, 1940)] + list(pairwise(years))
 
-
-for name, keywords in q2.items():
-    for start, end in full:
-        pattern = ' OR '.join(keywords)
-        herk = list(speaker_gender_lines(pattern, start, end))
-        pyo.iplot({'data' : herk,
-            'layout':{
-                'title':{
-                    'text': name + ' ' + str(start) + '-' + str(end),
-                    'xanchor': 'center',
-                    'x':0.5
-                }, }})
+for start, end in full:
+    k = []
+    k1 = []
+    k2 = []
+    k3 = []
+    for bk, bk1, bk2, bk3 in boxes(start, end):
+        k.append(bk)
+        k1.append(bk1)
+        k2.append(bk2)
+        k3.append(bk3)
+    for name, lines in [('kvinna', k), ('kvinna 1', k1), ('kvinna 2', k2), ('kvinna 3', k3)]:
+      pyo.iplot({'data' : k,
+          'layout':{
+              'title':{
+                  'text': name + ' ' + str(start) + '-' + str(end),
+                  'xanchor': 'center',
+                  'x':0.5
+              }, }})
 ```
+
 

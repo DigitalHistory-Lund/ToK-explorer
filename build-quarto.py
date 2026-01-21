@@ -13,7 +13,7 @@ for notebook in here.glob("*.ipynb"):
         [
             "quarto",
             "convert",
-            str(here / "ToK_exploration.ipynb"),
+            str(notebook),
             "--output",
             str(out_file),
         ]
