@@ -690,6 +690,7 @@ def get_timeline(match_pattern: str) -> List[Tuple[int, int]]:
 
         return cur.execute(f'select year, count(*) from utterance as u join utterance_fts as uf on u.rowid == uf.rowid where content match "{match_pattern}" group by year').fetchall()
 
+
 def get_baseline():
     with sqlite3.connect(tmp_db) as conn:
         cur = conn.cursor()
@@ -733,6 +734,256 @@ def enable_plotly_in_cell():
   init_notebook_mode(connected=False)
 ```
 
+
+## Establishing baselines
+
+```{python}
+with sqlite3.connect(tmp_db) as conn:
+    cur = conn.cursor()
+
+    line, r = make_line(cur.execute('select year, count(*) from utterance group by year order by year').fetchall(), 'total')
+
+
+pyo.iplot({'data' : [line,],
+            'layout':{
+                'title':{
+                    'text': 'Number of utterances per year',
+                    'xanchor': 'center',
+                    'x':0.5
+                }, }})
+```
+
+```{python}
+with sqlite3.connect(tmp_db) as conn:
+    cur = conn.cursor()
+
+    line, r = make_line(cur.execute('select year, sum(length(uf.content)) from utterance as u join utterance_fts as uf on u.rowid == uf.rowid group by year order by year').fetchall(), 'total')
+
+pyo.iplot({'data' : [line],
+            'layout':{
+                'title':{
+                    'text': 'Number of characters per year',
+                    'xanchor': 'center',
+                    'x':0.5
+                }, }})
+```
+
+```{python}
+with sqlite3.connect(tmp_db) as conn:
+    cur = conn.cursor()
+
+    line, r = make_line(cur.execute(
+        '''
+        select
+          year,
+          sum(
+            length(uf.content) -
+            length(
+              replace(
+                replace(
+                  replace(
+                    uf.content,
+                    " ",
+                    ""
+                  ),
+                  "\t",
+                  ""
+                ),
+              "\n",
+              ""
+              )
+            )
+          )
+        from
+          utterance as u
+        join
+          utterance_fts as uf
+          on
+            u.rowid == uf.rowid
+        group by
+          year
+        order by
+          year
+        ''').fetchall(), 'total')
+
+
+pyo.iplot({'data' : [line,],
+            'layout':{
+                'title':{
+                    'text': 'Number of words per year',
+                    'xanchor': 'center',
+                    'x':0.5
+                }, }})
+```
+
+```{python}
+with sqlite3.connect(tmp_db) as conn:
+    cur = conn.cursor()
+
+    line, r = make_line(cur.execute('select year, count(distinct who) from utterance group by year order by year').fetchall(), 'total')
+
+
+pyo.iplot({'data' : [line,],
+            'layout':{
+                'title':{
+                    'text': 'Number of speakers per year',
+                    'xanchor': 'center',
+                    'x':0.5
+                }, }})
+```
+
+```{python}
+from itertools import pairwise
+from collections import defaultdict
+
+def speakers():
+  with sqlite3.connect(tmp_db) as conn:
+    cur = conn.cursor()
+
+    mapper = defaultdict(int)
+
+    for (year_old, who_old), (year_new, who_new) in pairwise([(None, None)] + list(cur.execute('select year, who from utterance group by year, id order by date').fetchall())):
+      if who_old != who_new or year_old != year_new:
+        mapper[year_new] += 1
+
+  return sorted(mapper.items())
+
+
+
+line, r = make_line(speakers(), 'total')
+
+pyo.iplot({'data' : [line,],
+            'layout':{
+                'title':{
+                    'text': 'Number of cohesive utterances per year',
+                    'xanchor': 'center',
+                    'x':0.5
+                }, }})
+```
+
+```{python}
+def speechy():
+  with sqlite3.connect(tmp_db) as conn:
+    cur = conn.cursor()
+
+    for old, new in pairwise([(None,None,None,)] + cur.execute('select year, uf.content, who from utterance as u join utterance_fts as uf on u.rowid == uf.rowid group by year, u.id').fetchall() + [(None,None,None,)]):
+      if None in new:
+        break
+      yield new[0], new[1]
+      continue
+      if old[0] is None:
+        content = new[1]
+        continue
+
+      if new[2] == old[2] and new[2] != 'unknown':
+        content += ' ' + new[1]
+        continue
+
+      if new[0] is None:
+        yield (old[0], content)
+        break
+
+      if new[2] != old[2] or new[2] == 'unknown' or old[2] == 'unknown':
+        yield (old[0], content)
+        content = new[1]
+
+
+def utt_lens():
+
+    mapper = defaultdict(list)
+
+    for (year, utt) in list(speechy()):
+      utt_len = len(utt.split())
+      if utt_len < 50:
+        print(f'Skipping one-word utterance in year {year}: "{utt}"')
+        continue
+      if utt_len > 1000:
+        print(f'Skipping very long utterance in year {year}: "{utt}..." ({utt_len} words)')
+        continue
+      mapper[year].append(utt_len)
+
+    mins = {year: min(lengths) for year, lengths in mapper.items()}
+    maxs = {year: max(lengths) for year, lengths in mapper.items()}
+    avgs = {year: sum(lengths)/len(lengths) for year, lengths in mapper.items()}
+    stds = {year: (sum((l - avgs[year])**2 for l in lengths)/len(lengths))**0.5 for year, lengths in mapper.items()}
+    sdt1 = {year: avgs[year] + stds[year] for year in mapper.keys()}
+    sdt2 = {year: avgs[year] - stds[year] for year in mapper.keys()}
+    return sorted(avgs.items()), sorted(mins.items()), sorted(maxs.items()), sorted(sdt1.items()), sorted(sdt2.items())
+
+
+avgs, mins, maxs, std1, std2 = utt_lens()
+avgl, r = make_line(avgs, 'mean')
+minl, r = make_line(mins, 'mins')
+maxl, r = make_line(maxs, 'max')
+st1l, r = make_line(std1, 'std+1')
+st2l, r = make_line(std2, 'std-1')
+
+
+pyo.iplot({'data' : [avgl, minl, maxl, st1l, st2l],
+            'layout':{
+                'title':{
+                    'text': 'Number of speakers per year',
+                    'xanchor': 'center',
+                    'x':0.5
+                }, }})
+```
+
+```{python}
+import pandas as pd
+
+
+def make_lark():
+  lark = defaultdict(int)
+  yc = defaultdict(int)
+
+  for yr, utt in speechy():
+    utt_len = len(utt.split())
+    lark[(yr, utt_len)] += 1
+
+
+
+  for (yr, utt_len), count in lark.items():
+    yield {'x':yr, 'y':utt_len, 'z':count}
+
+df = pd.DataFrame.from_records(list(make_lark()))
+```
+
+```{python}
+import plotly.express as px
+fig = px.density_heatmap(df, x="x", y="y", marginal_x="histogram", marginal_y="histogram")
+fig.show()
+```
+
+
+
+```{python}
+from collections import defaultdict
+
+def speakers():
+  with sqlite3.connect(tmp_db) as conn:
+    cur = conn.cursor()
+
+    mapper = defaultdict(int)
+
+    for (year_old, who_old), (year_new, who_new) in pairwise([(None, None)] + list(cur.execute('select year, who from utterance group by year, id order by date').fetchall())):
+      if who_old != who_new or year_old != year_new:
+        mapper[year_new] += 1
+
+  return sorted(mapper.items())
+
+
+
+line, r = make_line(speakers(), 'total')
+
+pyo.iplot({'data' : [line,],
+            'layout':{
+                'title':{
+                    'text': 'Number of speakers per year',
+                    'xanchor': 'center',
+                    'x':0.5
+                }, }})
+```
+
 ## Looking at incidence of keyword groups
 
 ```{python}
@@ -774,7 +1025,7 @@ queries = {
     #'Första sökning*' : ['hon', 'henne*', 'fru*', 'fröken*', 'fröknar*', 'dam', 'dame*', 'mor', 'moder*', 'mamma*', 'mammor*','flick*', 'syster*', 'systrar', 'dotter*', 'döttrar*', 'hustru*','änka*', 'änke*', 'fruntimmer*', 'jungfru*'],
 
     # Non work-related titles
-    'Kvinna 2' : ['hon', 'henne*', 'fru',  'dam', 'dame*', 'mor', 'moder*', 'mamma*', 'mammor*','flick*', 'syster*', 'systrar', 'dotter*', 'döttrar*', 'hustru*','änka*', 'änke*', 'fruntimmer*', ], #
+    'Kvinna 2' : ['hon', 'henne*', 'fru',  'dam', 'dame*', 'mor', 'moder', 'mamma*', 'mammor*','flick*', 'syster*', 'systrar', 'dotter*', 'döttrar*', 'hustru*','änka*', 'änke*', 'fruntimmer*', ], #
 
     # Work-related and possibly work-related titles
     'Kvinna 3' : [
@@ -1041,6 +1292,446 @@ for name, keywords in q2.items():
                     'xanchor': 'center',
                     'x':0.5
                 }, }})
+```
+
+# Relative word frequencies
+
+Since the annual number of utterances shift greatly between 1919 and 1920
+-- whereas the number uttered words remains fairly stable -- we need to look
+at relative word frequencies instead.
+
+```{python}
+rel_db = './rel.dn'
+if os.path.exists(rel_db):
+    os.unlink(rel_db)
+
+with sqlite3.connect(rel_db) as conn:
+    cur = conn.cursor()
+    cur.execute('CREATE TABLE utterance (id str primary key, prev text, next text, who text, year int, date int, gender text, party text)')
+    # cur.execute("PRAGMA compile_options LIKE '%SQLITE_ENABLE_FTS5%';")
+
+
+
+    cur.execute('CREATE TABLE affiliation (who text, start int, end int, party text)')
+
+    cur.execute('CREATE index next_index on utterance(next)')
+    cur.execute('CREATE index who_index on utterance(who)')
+    cur.execute('CREATE index year_index on utterance(year)')
+
+    cur.executemany('INSERT INTO affiliation (who, start, end, party) values (?,?,?,?)', load_person_dates_affiliation())
+    cur.execute('CREATE index aff_index on affiliation(who)')
+
+    cur.execute('CREATE table word (id integer primary key autoincrement, utterance_id, word text, kvinna int, kvinna1 int , kvinna2 int, kvinna3 int)')
+    cur.execute('CREATE index word_index_word on word(word)')
+
+    cur.execute('CREATE index word_index_utteranceid on word(utterance_id)')
+
+    data = []
+    for batch in tqdm(batched(all_utterances, 50_000), total=len(all_utterances)//50_000):
+        data = [
+            {'id':u_id,
+             'prev':prev,
+             'next':nxt,
+             'content':text,
+             'reverse_content':text[::-1],
+             'who':who,
+             'year':year,
+             'gender': id_to_gender[who],
+             'date' : id_to_intdate[u_id]
+            } for u_id, prev, nxt, text, who, year in batch]
+
+        cur.executemany('INSERT INTO utterance (id, prev, next, who, year, gender, date) values (:id, :prev, :next, :who, :year, :gender, :date)', data)
+
+        word_data = [{'utterance_id': d['id'], 'word': word} for d in data for word in d['content'].split()]
+        cur.executemany('INSERT INTO word (utterance_id, word) values (:utterance_id, :word)', word_data)
+
+        conn.commit()
+
+    # TODO: Add speaker metadata
+    cur.execute("""
+    UPDATE utterance
+    SET party = (
+        SELECT party
+        FROM affiliation
+        WHERE utterance.who = affiliation.who
+          AND date BETWEEN start AND end
+    )
+    WHERE EXISTS (
+        SELECT 1
+        FROM affiliation
+        WHERE utterance.who = affiliation.who
+          AND date BETWEEN start AND end
+    )
+    """)
+
+    for key, patterns in tqdm(queries.items(), desc='Tagging relevant words'):
+        col_name = key.replace(' ','').lower()
+        for pattern in patterns:
+            pattern = pattern.replace('*', '%')
+            cur.execute(f'''
+            UPDATE word
+            SET {col_name} = 1
+            WHERE word like ?
+            ''', (pattern,))
+```
+
+```{python}
+# Pre-count baselines
+with sqlite3.connect(rel_db) as conn:
+    cur = conn.cursor()
+    # cur.execute('CREATE TABLE utterance (id text primary key, prev text, next text, who text, year int, date int, gender text, party text)')
+    # cur.execute('CREATE table word (id integer primary key autoincrement, utterance_id text, word text)')
+
+
+    cur.execute('CREATE table baseline (id integer primary key autoincrement, who text, year int, gender text, party text, count int, kvinna int, kvinna1, int, kvinna2 int, kvinna3 int)')
+    cur.execute('CREATE index baseline_ygp_index on baseline(year, gender, party)')
+    cur.execute('CREATE index baseline_gp_index on baseline(gender, party)')
+    cur.execute('CREATE index baseline_yp_index on baseline(year, party)')
+    cur.execute('CREATE index baseline_yg_index on baseline(year, gender)')
+    cur.execute('CREATE index baseline_y_index on baseline(year)')
+    cur.execute('CREATE index baseline_g_index on baseline(gender)')
+    cur.execute('CREATE index baseline_p_index on baseline(party)')
+
+    """
+    select who, year, gender, party, count(*), sum from utterance as u join word as w on u.id == w.utterance_id group by who, year, gender, party
+
+
+    """
+
+    cur.execute('''
+    INSERT INTO baseline (who, year, gender, party, count, kvinna, kvinna1, kvinna2, kvinna3)
+    SELECT who, year, gender, party, count(*), sum(kvinna), sum(kvinna1), sum(kvinna2), sum(kvinna3)
+    FROM utterance AS u
+    JOIN word AS w ON u.id = w.utterance_id
+    GROUP BY who, year, gender, party
+    ''')
+    conn.commit()
+```
+
+
+```{python}
+"""
+First, let's recreate the decomposition on utterance level per year
+to make sure that the methodology is sound.
+"""
+
+with sqlite3.connect(rel_db) as conn:
+    cur = conn.cursor()
+    cur.execute(
+    """
+    select year, sum(uc), sum(k), sum(k1), sum(k2), sum(k3) from
+      (
+      select
+        year,
+        1 as uc ,
+        max(kvinna) as k,
+        max(kvinna1) as k1,
+        max(kvinna2) as k2,
+        max(kvinna3) as k3
+      from
+        utterance as u
+      join
+        word as w
+      on
+        u.id == w.utterance_id
+      group by
+        year,
+        utterance_id
+      )
+    group by year
+    """)
+    results = cur.fetchall()
+    x, y_uc, y_k, y_k1, y_k2, y_k3 = zip(*results)
+    lines = [go.Line(x=x, y=y_uc, name='utterance count'),
+             go.Line(x=x, y=y_k, name='kvinna'),
+             go.Line(x=x, y=y_k1, name='kvinna1'),
+             go.Line(x=x, y=y_k2, name='kvinna2'),
+             go.Line(x=x, y=y_k3, name='kvinna3'),
+            ]
+    pyo.iplot({
+        'data':lines,
+                    'layout':{
+                'title':{
+                    'text': 'Sanity check: Recreating the "Counting Utterances with different keyword compositions."',
+                    'xanchor': 'center',
+                    'x':0.5
+                }, }})
+```
+
+```{python}
+# Perfect.
+
+"""
+Now we can recreate it with word frequencies and relative word frequencies.
+"""
+
+with sqlite3.connect(rel_db) as conn:
+    cur = conn.cursor()
+    cur.execute(
+    """
+      select
+        year,
+        sum(b.count) as uc,
+        sum(kvinna) as k,
+        cast(sum(kvinna )as real)/ sum(b.count) as kr,
+        sum(kvinna1) as k1,
+        cast(sum(kvinna1) as real)/ sum(b.count) as k1r,
+        sum(kvinna2) as k2,
+        cast(sum(kvinna2) as real)/ sum(b.count) as k2r,
+        sum(kvinna3) as k3,
+        cast(sum(kvinna3) as real)/ sum(b.count) as k3r
+      from
+        baseline as b
+      group by
+        year
+    """)
+    results = cur.fetchall()
+    x, y_uc, y_k,y_kr, y_k1, y_k1r, y_k2,y_k2r, y_k3, y_k3r = zip(*results)
+    lines = [
+            go.Line(x=x, y=y_uc, name='word count'),
+             go.Line(x=x, y=y_k, name='kvinna'),
+             go.Line(x=x, y=y_k1, name='kvinna1'),
+             go.Line(x=x, y=y_k2, name='kvinna2'),
+             go.Line(x=x, y=y_k3, name='kvinna3'),
+            ]
+    pyo.iplot({
+        'data':lines,
+                              'layout':{
+                'title':{
+                    'text': 'Counting keywords by category.',
+                    'xanchor': 'center',
+                    'x':0.5
+                }, }}
+    )
+
+    lines = [
+             go.Line(x=x, y=y_kr, name='kvinna'),
+             go.Line(x=x, y=y_k1r, name='kvinna1'),
+             go.Line(x=x, y=y_k2r, name='kvinna2'),
+             go.Line(x=x, y=y_k3r, name='kvinna3'),
+            ]
+    pyo.iplot({
+        'data':lines,
+                              'layout':{
+                'title':{
+                    'text': 'Relative keyword frequencies by category.',
+                    'xanchor': 'center',
+                    'x':0.5
+                }, }}
+    )
+```
+
+```{python}
+# Interesting that no big differences show up here.
+"Let's add the gender dimension."
+with sqlite3.connect(rel_db) as conn:
+    cur = conn.cursor()
+    cur.execute(
+    """
+      select
+        year,
+        gender,
+        sum(b.count) as uc,
+        sum(kvinna) as k,
+        cast(sum(kvinna )as real)/ sum(b.count) as kr,
+        sum(kvinna1) as k1,
+        cast(sum(kvinna1) as real)/ sum(b.count) as k1r,
+        sum(kvinna2) as k2,
+        cast(sum(kvinna2) as real)/ sum(b.count) as k2r,
+        sum(kvinna3) as k3,
+        cast(sum(kvinna3) as real)/ sum(b.count) as k3r
+      from
+        baseline as b
+      where gender is not null
+      group by
+        year, gender
+      order by year, gender
+    """)
+    results = cur.fetchall()
+
+    by_gender = defaultdict(list)
+    for row in results:
+        year, gender, *values = row
+        by_gender[gender].append((year, *values))
+
+
+    lines = []
+    relines = []
+    for gender, data in by_gender.items():
+
+        x, y_uc, y_k,y_kr, y_k1, y_k1r, y_k2,y_k2r, y_k3, y_k3r = zip(*data)
+
+
+        lines += [
+              go.Line(x=x, y=y_uc, name=f'{gender}: word count'),
+              go.Line(x=x, y=y_k, name=f'{gender}: kvinna'),
+              go.Line(x=x, y=y_k1, name=f'{gender}: kvinna1'),
+              go.Line(x=x, y=y_k2, name=f'{gender}: kvinna2'),
+              go.Line(x=x, y=y_k3, name=f'{gender}: kvinna3'),
+              ]
+
+        relines += [
+              go.Line(x=x, y=y_kr, name=f'{gender}: kvinna'),
+              go.Line(x=x, y=y_k1r, name=f'{gender}: kvinna1'),
+              go.Line(x=x, y=y_k2r, name=f'{gender}: kvinna2'),
+              go.Line(x=x, y=y_k3r, name=f'{gender}: kvinna3'),
+              ]
+
+    pyo.iplot({
+        'data':lines
+    ,
+                              'layout':{
+                'title':{
+                    'text': 'Counting keyword categories by gender.',
+                    'xanchor': 'center',
+                    'x':0.5
+                }, }}
+    )
+    pyo.iplot({
+        'data':relines,
+                              'layout':{
+                'title':{
+                    'text': 'Relative keyword categories frequencies by gender.',
+                    'xanchor': 'center',
+                    'x':0.5
+                }, }}
+    )
+```
+
+```{python}
+# Big difference here. Interesting.
+# Interesting that no big differences show up here.
+"Let's add the party dimension."
+with sqlite3.connect(rel_db) as conn:
+    cur = conn.cursor()
+    cur.execute(
+    """
+      select
+        year,
+        party,
+        sum(b.count) as uc,
+        sum(kvinna) as k,
+        cast(sum(kvinna )as real)/ sum(b.count) as kr,
+        sum(kvinna1) as k1,
+        cast(sum(kvinna1) as real)/ sum(b.count) as k1r,
+        sum(kvinna2) as k2,
+        cast(sum(kvinna2) as real)/ sum(b.count) as k2r,
+        sum(kvinna3) as k3,
+        cast(sum(kvinna3) as real)/ sum(b.count) as k3r
+      from
+        baseline as b
+      where party is not null
+      group by
+        year, party
+      order by year, party
+    """)
+    results = cur.fetchall()
+
+    by_party = defaultdict(list)
+    for row in results:
+        year, party, *values = row
+        by_party[party].append((year, *values))
+
+
+    k = []
+    k1 = []
+    k2 = []
+    k3 = []
+    for party, data in by_party.items():
+
+        x, y_uc, y_k,y_kr, y_k1, y_k1r, y_k2,y_k2r, y_k3, y_k3r = zip(*data)
+
+
+
+        k.append(go.Line(x=x, y=y_kr, name=f'{party}'),)
+        k1.append(go.Line(x=x, y=y_k1r, name=f'{party}'),)
+        k2.append(go.Line(x=x, y=y_k2r, name=f'{party}'),)
+        k3.append(go.Line(x=x, y=y_k3r, name=f'{party}'),)
+
+
+    pyo.iplot({
+        'data':k    ,
+        'layout':{
+                'title':{
+                    'text': 'Relative frequencies of "kvinna" by party',
+                    'xanchor': 'center',
+                    'x':0.5
+                }, }}
+    )
+    pyo.iplot({
+        'data':k1    ,
+        'layout':{
+                'title':{
+                    'text': 'Relative frequencies of "kvinna 1" by party',
+                    'xanchor': 'center',
+                    'x':0.5
+                }, }}
+    )
+    pyo.iplot({
+        'data':k2    ,
+        'layout':{
+                'title':{
+                    'text': 'Relative frequencies of "kvinna 2" by party',
+                    'xanchor': 'center',
+                    'x':0.5
+                }, }}
+    )
+    pyo.iplot({
+        'data':k3    ,
+        'layout':{
+                'title':{
+                    'text': 'Relative frequencies of "kvinna 3" by party',
+                    'xanchor': 'center',
+                    'x':0.5
+                }, }}
+    )
+```
+
+```{python}
+def boxes(lower=1900, upper=1940):
+    with sqlite3.connect(rel_db) as conn:
+
+        cur = conn.cursor()
+
+        genders = [ans[0] for ans in cur.execute('select distinct gender from utterance')]
+
+        for gender in genders:
+            ark = cur.execute(
+                f"""select who, party,
+        cast(sum(kvinna )as real)/ sum(b.count) as kr,
+        cast(sum(kvinna1) as real)/ sum(b.count) as k1r,
+        cast(sum(kvinna2) as real)/ sum(b.count) as k2r,
+        cast(sum(kvinna3) as real)/ sum(b.count) as k3r
+        from baseline as b
+        where gender == "{gender}" and year between {lower} and {upper} group by who
+                """).fetchall()
+            if ark == []:
+                continue
+
+            who, x, yk, yk1, yk2, yk3 = zip(*ark)
+            yield go.Bar(x=x, y=yk), go.Bar(x=x, y=yk1), go.Bar(x=x, y=yk2), go.Bar(x=x, y=yk3)
+
+years = list(range(1900, 1941, 10))
+full = [(1900, 1940)] + list(pairwise(years))
+
+for start, end in full:
+    k = []
+    k1 = []
+    k2 = []
+    k3 = []
+    for bk, bk1, bk2, bk3 in boxes(start, end):
+        k.append(bk)
+        k1.append(bk1)
+        k2.append(bk2)
+        k3.append(bk3)
+    for name, lines in [('kvinna', k), ('kvinna 1', k1), ('kvinna 2', k2), ('kvinna 3', k3)]:
+      pyo.iplot({'data' : k,
+          'layout':{
+              'title':{
+                  'text': name + ' ' + str(start) + '-' + str(end),
+                  'xanchor': 'center',
+                  'x':0.5
+              }, }})
 ```
 
 
