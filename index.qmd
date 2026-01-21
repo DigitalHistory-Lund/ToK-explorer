@@ -718,7 +718,7 @@ def make_line(timeline, name):
     name_with_count = f'{name} ({total:,})'
     yy = [y1/baseline[x1] for x1,y1 in timeline]
     assert len(y) == len(yy)
-    return go.Line(x=x, y=y, name=name_with_count), go.Line(x=x, y=yy, name=name_with_count)
+    return go.Scatter(mode='lines',x=x, y=y, name=name_with_count), go.Scatter(mode='lines',x=x, y=yy, name=name_with_count)
 ```
 
 ```{python}
@@ -1141,7 +1141,7 @@ def gen_lines(pattern='kvinna'):
             x,y = zip(*ark)
             total = sum(y)
             name_with_count = f'{gender} ({total:,})'
-            yield go.Line(x=x, y=y, name=name_with_count)
+            yield go.Scatter(mode='lines',x=x, y=y, name=name_with_count)
 
 
 
@@ -1174,7 +1174,7 @@ def party_lines(pattern='kvinna'):
             x,y = zip(*ark)
             total = sum(y)
             name_with_count = f'{party} ({total:,})'
-            yield go.Line(x=x, y=y, name=name_with_count)
+            yield go.Scatter(mode='lines',x=x, y=y, name=name_with_count)
 
 
 for name, keywords in q2.items():
@@ -1206,7 +1206,7 @@ def speaker_gender_lines(pattern='kvinna'):
             x,y = zip(*ark)
             total = sum(y)
             name_with_count = f'{gender} ({total:,})'
-            yield go.Line(x=x, y=y, name=name_with_count)
+            yield go.Scatter(mode='lines',x=x, y=y, name=name_with_count)
 
 for name, keywords in q2.items():
     pattern = ' OR '.join(keywords)
@@ -1238,7 +1238,7 @@ def speaker_party_lines(pattern='kvinna'):
             x,y = zip(*ark)
             total = sum(y)
             name_with_count = f'{party} ({total:,})'
-            yield go.Line(x=x, y=y, name=name_with_count)
+            yield go.Scatter(mode='lines',x=x, y=y, name=name_with_count)
 
 
 for name, keywords in q2.items():
@@ -1442,11 +1442,11 @@ with sqlite3.connect(rel_db) as conn:
     """)
     results = cur.fetchall()
     x, y_uc, y_k, y_k1, y_k2, y_k3 = zip(*results)
-    lines = [go.Line(x=x, y=y_uc, name='utterance count'),
-             go.Line(x=x, y=y_k, name='kvinna'),
-             go.Line(x=x, y=y_k1, name='kvinna1'),
-             go.Line(x=x, y=y_k2, name='kvinna2'),
-             go.Line(x=x, y=y_k3, name='kvinna3'),
+    lines = [go.Scatter(mode='lines',x=x, y=y_uc, name='utterance count'),
+             go.Scatter(mode='lines',x=x, y=y_k, name='kvinna'),
+             go.Scatter(mode='lines',x=x, y=y_k1, name='kvinna1'),
+             go.Scatter(mode='lines',x=x, y=y_k2, name='kvinna2'),
+             go.Scatter(mode='lines',x=x, y=y_k3, name='kvinna3'),
             ]
     pyo.iplot({
         'data':lines,
@@ -1488,11 +1488,11 @@ with sqlite3.connect(rel_db) as conn:
     results = cur.fetchall()
     x, y_uc, y_k,y_kr, y_k1, y_k1r, y_k2,y_k2r, y_k3, y_k3r = zip(*results)
     lines = [
-            go.Line(x=x, y=y_uc, name='word count'),
-             go.Line(x=x, y=y_k, name='kvinna'),
-             go.Line(x=x, y=y_k1, name='kvinna1'),
-             go.Line(x=x, y=y_k2, name='kvinna2'),
-             go.Line(x=x, y=y_k3, name='kvinna3'),
+            go.Scatter(mode='lines',x=x, y=y_uc, name='word count'),
+             go.Scatter(mode='lines',x=x, y=y_k, name='kvinna'),
+             go.Scatter(mode='lines',x=x, y=y_k1, name='kvinna1'),
+             go.Scatter(mode='lines',x=x, y=y_k2, name='kvinna2'),
+             go.Scatter(mode='lines',x=x, y=y_k3, name='kvinna3'),
             ]
     pyo.iplot({
         'data':lines,
@@ -1505,10 +1505,10 @@ with sqlite3.connect(rel_db) as conn:
     )
 
     lines = [
-             go.Line(x=x, y=y_kr, name='kvinna'),
-             go.Line(x=x, y=y_k1r, name='kvinna1'),
-             go.Line(x=x, y=y_k2r, name='kvinna2'),
-             go.Line(x=x, y=y_k3r, name='kvinna3'),
+             go.Scatter(mode='lines',x=x, y=y_kr, name='kvinna'),
+             go.Scatter(mode='lines',x=x, y=y_k1r, name='kvinna1'),
+             go.Scatter(mode='lines',x=x, y=y_k2r, name='kvinna2'),
+             go.Scatter(mode='lines',x=x, y=y_k3r, name='kvinna3'),
             ]
     pyo.iplot({
         'data':lines,
@@ -1563,18 +1563,18 @@ with sqlite3.connect(rel_db) as conn:
 
 
         lines += [
-              go.Line(x=x, y=y_uc, name=f'{gender}: word count'),
-              go.Line(x=x, y=y_k, name=f'{gender}: kvinna'),
-              go.Line(x=x, y=y_k1, name=f'{gender}: kvinna1'),
-              go.Line(x=x, y=y_k2, name=f'{gender}: kvinna2'),
-              go.Line(x=x, y=y_k3, name=f'{gender}: kvinna3'),
+              go.Scatter(mode='lines',x=x, y=y_uc, name=f'{gender}: word count'),
+              go.Scatter(mode='lines',x=x, y=y_k, name=f'{gender}: kvinna'),
+              go.Scatter(mode='lines',x=x, y=y_k1, name=f'{gender}: kvinna1'),
+              go.Scatter(mode='lines',x=x, y=y_k2, name=f'{gender}: kvinna2'),
+              go.Scatter(mode='lines',x=x, y=y_k3, name=f'{gender}: kvinna3'),
               ]
 
         relines += [
-              go.Line(x=x, y=y_kr, name=f'{gender}: kvinna'),
-              go.Line(x=x, y=y_k1r, name=f'{gender}: kvinna1'),
-              go.Line(x=x, y=y_k2r, name=f'{gender}: kvinna2'),
-              go.Line(x=x, y=y_k3r, name=f'{gender}: kvinna3'),
+              go.Scatter(mode='lines',x=x, y=y_kr, name=f'{gender}: kvinna'),
+              go.Scatter(mode='lines',x=x, y=y_k1r, name=f'{gender}: kvinna1'),
+              go.Scatter(mode='lines',x=x, y=y_k2r, name=f'{gender}: kvinna2'),
+              go.Scatter(mode='lines',x=x, y=y_k3r, name=f'{gender}: kvinna3'),
               ]
 
     pyo.iplot({
@@ -1643,10 +1643,10 @@ with sqlite3.connect(rel_db) as conn:
 
 
 
-        k.append(go.Line(x=x, y=y_kr, name=f'{party}'),)
-        k1.append(go.Line(x=x, y=y_k1r, name=f'{party}'),)
-        k2.append(go.Line(x=x, y=y_k2r, name=f'{party}'),)
-        k3.append(go.Line(x=x, y=y_k3r, name=f'{party}'),)
+        k.append(go.Scatter(mode='lines',x=x, y=y_kr, name=f'{party}'),)
+        k1.append(go.Scatter(mode='lines',x=x, y=y_k1r, name=f'{party}'),)
+        k2.append(go.Scatter(mode='lines',x=x, y=y_k2r, name=f'{party}'),)
+        k3.append(go.Scatter(mode='lines',x=x, y=y_k3r, name=f'{party}'),)
 
 
     pyo.iplot({
