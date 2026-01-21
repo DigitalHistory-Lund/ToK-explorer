@@ -36,12 +36,12 @@ for notebook in here.glob("*.ipynb"):
     content = content.replace(
         "jupyter: tok\n",
         """jupyter: tok
-    execute:
+execute:
     echo: false
     author:
         - Mathias Johansson
         - Ulrika Holgersson
-    """,
+""",
     )
 
     with open(out_file, "w", encoding="utf8") as f:
