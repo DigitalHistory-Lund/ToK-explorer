@@ -8,9 +8,17 @@ website:
   title: "ToK-explorer"
   navbar:
     left:
-      - href: index.qmd
-        text: Home
-
+      - text: "Home"
+        href: index.qmd
+      - text: "About"
+        href: about.qmd
+      - href: "ToK_relative.qmd"
+        text: "Relative word frequencies"
+      - href: "ToK_baseline.qmd"
+        text: "Baselines"
+    right:
+      - icon: github
+        href: "https://github.com/DigitalHistory-Lund/ToK-explorer"
 format:
   html:
     theme:
