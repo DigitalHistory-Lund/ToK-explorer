@@ -1,3 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/index.html</loc>
+    <lastmod>2026-03-07T18:34:49.148Z</lastmod>
+  </url>
+  <url>
+    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_baseline.html</loc>
+    <lastmod>2026-03-07T18:34:48.816Z</lastmod>
+  </url>
+  <url>
+    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_relative.html</loc>
+    <lastmod>2026-03-07T18:34:49.484Z</lastmod>
+  </url>
 </urlset>
