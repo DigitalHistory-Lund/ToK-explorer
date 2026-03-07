@@ -1,0 +1,3 @@
+[submodule "tok_preparer"]
+	path = tok_preparer
+	url = https://github.com/DigitalHistory-Lund/ToK-Preparer.git
