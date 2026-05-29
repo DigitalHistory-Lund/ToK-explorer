@@ -2,7 +2,7 @@ cff-version: 1.2.0
 type: software
 title: "Tal om Kvinnor: Explorer"
 message: "If you use this site or its derivative data, please cite it using these metadata."
-url: "https://github.com/DigitalHistory-Lund/ToK-Preparer"
+url: "https://github.com/DigitalHistory-Lund/ToK-Explorer"
 date-released: "2025-12-09"
 license: CC-BY-NC-4.0
 identifiers:
@@ -17,3 +17,4 @@ authors:
   - family-names: Holgersson
     given-names: Ulrika
     orcid: https://orcid.org/0000-0002-0672-6166
+10.5281/zenodo.18211781.

@@ -38,9 +38,13 @@ for notebook in here.glob("*.ipynb"):
         """jupyter: tok
 execute:
     echo: false
-    author:
-        - Mathias Johansson
-        - Ulrika Holgersson
+authors:
+  - name: Mathias Johansson
+    email: MathiasJohansson@kultur.lu.se
+    orcid: https://orcid.org/0000-0002-3338-0551
+  - name: Ulrika Holgersson
+    orcid: https://orcid.org/0000-0002-0672-6166
+
 """,
     )
 

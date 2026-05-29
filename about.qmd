@@ -1,15 +1,37 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18211781.svg)](https://doi.org/10.5281/zenodo.18211781)
+---
+title: About
+execute:
+  echo: false
+authors:
+  - name: Mathias Johansson
+    email: MathiasJohansson@kultur.lu.se
+    orcid: https://orcid.org/0000-0002-3338-0551
+  - name: Ulrika Holgersson
+    orcid: https://orcid.org/0000-0002-0672-6166
 
-# Tal om Kvinnor: Explorer
 
-A small static website for exploring the annotated corpus of Swedish
-Parliamentary debates.
+---
 
-## Data Source
+[![](https://zenodo.org/badge/DOI/10.5281/zenodo.18211781.svg)](https://doi.org/10.5281/zenodo.18211781)
 
-https://github.com/swerik-project/the-swedish-parliament-corpus/releases/tag/v2025.12.19
+
+# Citation Information
+
+This work is licensed under a Creative Commons Attribution 4.0 International License.
+
+For citation purposes, please use the following information:
+
 
 ```
+@software{Johansson_Tal_om_Kvinnor_2025,
+    author = {Johansson, Mathias and Holgersson, Ulrika},
+    license = {CC-BY-NC-4.0},
+    month = dec,
+    title = {{Tal om Kvinnor: Explorer}},
+    url = {https://github.com/DigitalHistory-Lund/ToK-Explorer},
+    year = {2025}
+}
+
 @inproceedings{yrjanainen-etal-2024-swedish,
     title = "The {S}wedish Parliament Corpus 1867 {--} 2022",
     author = {Yrj{\"a}n{\"a}inen, V{\"a}in{\"o} Aleksi  and
@@ -33,16 +55,5 @@ https://github.com/swerik-project/the-swedish-parliament-corpus/releases/tag/v20
     publisher = "ELRA and ICCL",
     url = "https://aclanthology.org/2024.lrec-main.1400/",
     pages = "16100--16112",
-}
-```
-
-```
-@software{Johansson_Tal_om_Kvinnor_2025,
-    author = {Johansson, Mathias and Holgersson, Ulrika},
-    license = {CC-BY-NC-4.0},
-    month = dec,
-    title = {{Tal om Kvinnor: Annotated Corpus}},
-    url = {https://github.com/DigitalHistory-Lund/ToK-Preparer},
-    year = {2025}
 }
 ```

@@ -3,6 +3,8 @@ project:
   render:
     - "*.qmd"
     - "!*.ipynb"
+  pre-render:
+    - python build-quarto.py
 
 website:
   title: "ToK-explorer"
@@ -10,13 +12,13 @@ website:
     left:
       - text: "Home"
         href: index.qmd
-      - text: "About"
-        href: about.qmd
       - href: "ToK_relative.qmd"
         text: "Relative word frequencies"
       - href: "ToK_baseline.qmd"
         text: "Baselines"
     right:
+      - text: "About"
+        href: about.qmd
       - icon: github
         href: "https://github.com/DigitalHistory-Lund/ToK-explorer"
 format:
