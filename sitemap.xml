@@ -2,15 +2,39 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/index.html</loc>
-    <lastmod>2026-05-29T20:45:36.156Z</lastmod>
+    <lastmod>2026-05-31T13:54:59.905Z</lastmod>
   </url>
   <url>
     <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_relative.html</loc>
-    <lastmod>2026-05-29T20:45:36.585Z</lastmod>
+    <lastmod>2026-05-31T13:55:00.226Z</lastmod>
+  </url>
+  <url>
+    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_relative.chamber1.html</loc>
+    <lastmod>2026-05-31T13:55:00.227Z</lastmod>
+  </url>
+  <url>
+    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_exploration.chamber1.html</loc>
+    <lastmod>2026-05-31T13:55:00.226Z</lastmod>
+  </url>
+  <url>
+    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_baseline.chamber2.html</loc>
+    <lastmod>2026-05-31T13:55:00.227Z</lastmod>
+  </url>
+  <url>
+    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_baseline.chamber1.html</loc>
+    <lastmod>2026-05-31T13:55:00.227Z</lastmod>
   </url>
   <url>
     <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_baseline.html</loc>
-    <lastmod>2026-05-29T20:45:35.723Z</lastmod>
+    <lastmod>2026-05-31T13:54:59.583Z</lastmod>
+  </url>
+  <url>
+    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_exploration.chamber2.html</loc>
+    <lastmod>2026-05-31T13:55:00.227Z</lastmod>
+  </url>
+  <url>
+    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_relative.chamber2.html</loc>
+    <lastmod>2026-05-31T13:55:00.227Z</lastmod>
   </url>
   <url>
     <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/about.html</loc>

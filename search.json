@@ -4,56 +4,288 @@
     "href": "index.html#looking-at-incidence-of-keyword-groups",
     "title": "Tal om Kvinnor (ToK)",
     "section": "Looking at incidence of keyword groups",
-    "text": "Looking at incidence of keyword groups"
+    "text": "Looking at incidence of keyword groups",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Exploration"
+    ]
   },
   {
     "objectID": "index.html#looking-at-utterances-by-keywords-and-gender",
     "href": "index.html#looking-at-utterances-by-keywords-and-gender",
     "title": "Tal om Kvinnor (ToK)",
     "section": "Looking at utterances by keywords and gender",
-    "text": "Looking at utterances by keywords and gender\n\n\n[None, 'man', 'woman']\n\n\n                                                    \n\n\n[None, 'man', 'woman']\n\n\n                                                    \n\n\n[None, 'man', 'woman']\n\n\n                                                    \n\n\n[None, 'man', 'woman']"
+    "text": "Looking at utterances by keywords and gender\n\n\n[None, 'man', 'woman']\n\n\n                                                    \n\n\n[None, 'man', 'woman']\n\n\n                                                    \n\n\n[None, 'man', 'woman']\n\n\n                                                    \n\n\n[None, 'man', 'woman']",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Exploration"
+    ]
   },
   {
     "objectID": "index.html#looking-at-utterances-by-keywords-and-party",
     "href": "index.html#looking-at-utterances-by-keywords-and-party",
     "title": "Tal om Kvinnor (ToK)",
     "section": "Looking at utterances by keywords and party",
-    "text": "Looking at utterances by keywords and party"
+    "text": "Looking at utterances by keywords and party",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Exploration"
+    ]
   },
   {
     "objectID": "index.html#looking-at-number-of-speakers-with-utterances-containing-keywords-by-gender",
     "href": "index.html#looking-at-number-of-speakers-with-utterances-containing-keywords-by-gender",
     "title": "Tal om Kvinnor (ToK)",
     "section": "Looking at number of speakers with utterances containing keywords, by gender",
-    "text": "Looking at number of speakers with utterances containing keywords, by gender"
+    "text": "Looking at number of speakers with utterances containing keywords, by gender",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Exploration"
+    ]
   },
   {
     "objectID": "index.html#looking-at-number-of-speakers-with-utterances-containing-keywords-by-party",
     "href": "index.html#looking-at-number-of-speakers-with-utterances-containing-keywords-by-party",
     "title": "Tal om Kvinnor (ToK)",
     "section": "Looking at number of speakers with utterances containing keywords, by party",
-    "text": "Looking at number of speakers with utterances containing keywords, by party"
+    "text": "Looking at number of speakers with utterances containing keywords, by party",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Exploration"
+    ]
   },
   {
     "objectID": "index.html#utterances-by-gender-party-and-decade",
     "href": "index.html#utterances-by-gender-party-and-decade",
     "title": "Tal om Kvinnor (ToK)",
     "section": "Utterances by gender, party and decade",
-    "text": "Utterances by gender, party and decade"
+    "text": "Utterances by gender, party and decade",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Exploration"
+    ]
   },
   {
     "objectID": "ToK_relative.html#looking-at-incidence-of-keyword-groups",
     "href": "ToK_relative.html#looking-at-incidence-of-keyword-groups",
     "title": "Relative word frequencies",
     "section": "Looking at incidence of keyword groups",
-    "text": "Looking at incidence of keyword groups"
+    "text": "Looking at incidence of keyword groups",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Relative word frequencies"
+    ]
+  },
+  {
+    "objectID": "ToK_relative.chamber1.html#looking-at-incidence-of-keyword-groups",
+    "href": "ToK_relative.chamber1.html#looking-at-incidence-of-keyword-groups",
+    "title": "Relative word frequencies – Chamber 1",
+    "section": "Looking at incidence of keyword groups",
+    "text": "Looking at incidence of keyword groups",
+    "crumbs": [
+      "Home",
+      "Chamber 1",
+      "Relative word frequencies"
+    ]
+  },
+  {
+    "objectID": "ToK_exploration.chamber1.html#looking-at-incidence-of-keyword-groups",
+    "href": "ToK_exploration.chamber1.html#looking-at-incidence-of-keyword-groups",
+    "title": "Tal om Kvinnor (ToK) – Chamber 1",
+    "section": "Looking at incidence of keyword groups",
+    "text": "Looking at incidence of keyword groups",
+    "crumbs": [
+      "Home",
+      "Chamber 1",
+      "Exploration"
+    ]
+  },
+  {
+    "objectID": "ToK_exploration.chamber1.html#looking-at-utterances-by-keywords-and-gender",
+    "href": "ToK_exploration.chamber1.html#looking-at-utterances-by-keywords-and-gender",
+    "title": "Tal om Kvinnor (ToK) – Chamber 1",
+    "section": "Looking at utterances by keywords and gender",
+    "text": "Looking at utterances by keywords and gender\n\n\n['man', None, 'woman']\n\n\n                                                    \n\n\n['man', None, 'woman']\n\n\n                                                    \n\n\n['man', None, 'woman']\n\n\n                                                    \n\n\n['man', None, 'woman']",
+    "crumbs": [
+      "Home",
+      "Chamber 1",
+      "Exploration"
+    ]
+  },
+  {
+    "objectID": "ToK_exploration.chamber1.html#looking-at-utterances-by-keywords-and-party",
+    "href": "ToK_exploration.chamber1.html#looking-at-utterances-by-keywords-and-party",
+    "title": "Tal om Kvinnor (ToK) – Chamber 1",
+    "section": "Looking at utterances by keywords and party",
+    "text": "Looking at utterances by keywords and party",
+    "crumbs": [
+      "Home",
+      "Chamber 1",
+      "Exploration"
+    ]
+  },
+  {
+    "objectID": "ToK_exploration.chamber1.html#looking-at-number-of-speakers-with-utterances-containing-keywords-by-gender",
+    "href": "ToK_exploration.chamber1.html#looking-at-number-of-speakers-with-utterances-containing-keywords-by-gender",
+    "title": "Tal om Kvinnor (ToK) – Chamber 1",
+    "section": "Looking at number of speakers with utterances containing keywords, by gender",
+    "text": "Looking at number of speakers with utterances containing keywords, by gender",
+    "crumbs": [
+      "Home",
+      "Chamber 1",
+      "Exploration"
+    ]
+  },
+  {
+    "objectID": "ToK_exploration.chamber1.html#looking-at-number-of-speakers-with-utterances-containing-keywords-by-party",
+    "href": "ToK_exploration.chamber1.html#looking-at-number-of-speakers-with-utterances-containing-keywords-by-party",
+    "title": "Tal om Kvinnor (ToK) – Chamber 1",
+    "section": "Looking at number of speakers with utterances containing keywords, by party",
+    "text": "Looking at number of speakers with utterances containing keywords, by party",
+    "crumbs": [
+      "Home",
+      "Chamber 1",
+      "Exploration"
+    ]
+  },
+  {
+    "objectID": "ToK_exploration.chamber1.html#utterances-by-gender-party-and-decade",
+    "href": "ToK_exploration.chamber1.html#utterances-by-gender-party-and-decade",
+    "title": "Tal om Kvinnor (ToK) – Chamber 1",
+    "section": "Utterances by gender, party and decade",
+    "text": "Utterances by gender, party and decade",
+    "crumbs": [
+      "Home",
+      "Chamber 1",
+      "Exploration"
+    ]
+  },
+  {
+    "objectID": "ToK_baseline.chamber2.html#establishing-baselines",
+    "href": "ToK_baseline.chamber2.html#establishing-baselines",
+    "title": "Exploring Baselines – Chamber 2",
+    "section": "Establishing baselines",
+    "text": "Establishing baselines",
+    "crumbs": [
+      "Home",
+      "Chamber 2",
+      "Baselines"
+    ]
+  },
+  {
+    "objectID": "ToK_baseline.chamber1.html#establishing-baselines",
+    "href": "ToK_baseline.chamber1.html#establishing-baselines",
+    "title": "Exploring Baselines – Chamber 1",
+    "section": "Establishing baselines",
+    "text": "Establishing baselines",
+    "crumbs": [
+      "Home",
+      "Chamber 1",
+      "Baselines"
+    ]
   },
   {
     "objectID": "ToK_baseline.html#establishing-baselines",
     "href": "ToK_baseline.html#establishing-baselines",
     "title": "Exploring Baselines",
     "section": "Establishing baselines",
-    "text": "Establishing baselines"
+    "text": "Establishing baselines",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Baselines"
+    ]
+  },
+  {
+    "objectID": "ToK_exploration.chamber2.html#looking-at-incidence-of-keyword-groups",
+    "href": "ToK_exploration.chamber2.html#looking-at-incidence-of-keyword-groups",
+    "title": "Tal om Kvinnor (ToK) – Chamber 2",
+    "section": "Looking at incidence of keyword groups",
+    "text": "Looking at incidence of keyword groups",
+    "crumbs": [
+      "Home",
+      "Chamber 2",
+      "Exploration"
+    ]
+  },
+  {
+    "objectID": "ToK_exploration.chamber2.html#looking-at-utterances-by-keywords-and-gender",
+    "href": "ToK_exploration.chamber2.html#looking-at-utterances-by-keywords-and-gender",
+    "title": "Tal om Kvinnor (ToK) – Chamber 2",
+    "section": "Looking at utterances by keywords and gender",
+    "text": "Looking at utterances by keywords and gender\n\n\n[None, 'man', 'woman']\n\n\n                                                    \n\n\n[None, 'man', 'woman']\n\n\n                                                    \n\n\n[None, 'man', 'woman']\n\n\n                                                    \n\n\n[None, 'man', 'woman']",
+    "crumbs": [
+      "Home",
+      "Chamber 2",
+      "Exploration"
+    ]
+  },
+  {
+    "objectID": "ToK_exploration.chamber2.html#looking-at-utterances-by-keywords-and-party",
+    "href": "ToK_exploration.chamber2.html#looking-at-utterances-by-keywords-and-party",
+    "title": "Tal om Kvinnor (ToK) – Chamber 2",
+    "section": "Looking at utterances by keywords and party",
+    "text": "Looking at utterances by keywords and party",
+    "crumbs": [
+      "Home",
+      "Chamber 2",
+      "Exploration"
+    ]
+  },
+  {
+    "objectID": "ToK_exploration.chamber2.html#looking-at-number-of-speakers-with-utterances-containing-keywords-by-gender",
+    "href": "ToK_exploration.chamber2.html#looking-at-number-of-speakers-with-utterances-containing-keywords-by-gender",
+    "title": "Tal om Kvinnor (ToK) – Chamber 2",
+    "section": "Looking at number of speakers with utterances containing keywords, by gender",
+    "text": "Looking at number of speakers with utterances containing keywords, by gender",
+    "crumbs": [
+      "Home",
+      "Chamber 2",
+      "Exploration"
+    ]
+  },
+  {
+    "objectID": "ToK_exploration.chamber2.html#looking-at-number-of-speakers-with-utterances-containing-keywords-by-party",
+    "href": "ToK_exploration.chamber2.html#looking-at-number-of-speakers-with-utterances-containing-keywords-by-party",
+    "title": "Tal om Kvinnor (ToK) – Chamber 2",
+    "section": "Looking at number of speakers with utterances containing keywords, by party",
+    "text": "Looking at number of speakers with utterances containing keywords, by party",
+    "crumbs": [
+      "Home",
+      "Chamber 2",
+      "Exploration"
+    ]
+  },
+  {
+    "objectID": "ToK_exploration.chamber2.html#utterances-by-gender-party-and-decade",
+    "href": "ToK_exploration.chamber2.html#utterances-by-gender-party-and-decade",
+    "title": "Tal om Kvinnor (ToK) – Chamber 2",
+    "section": "Utterances by gender, party and decade",
+    "text": "Utterances by gender, party and decade",
+    "crumbs": [
+      "Home",
+      "Chamber 2",
+      "Exploration"
+    ]
+  },
+  {
+    "objectID": "ToK_relative.chamber2.html#looking-at-incidence-of-keyword-groups",
+    "href": "ToK_relative.chamber2.html#looking-at-incidence-of-keyword-groups",
+    "title": "Relative word frequencies – Chamber 2",
+    "section": "Looking at incidence of keyword groups",
+    "text": "Looking at incidence of keyword groups",
+    "crumbs": [
+      "Home",
+      "Chamber 2",
+      "Relative word frequencies"
+    ]
   },
   {
     "objectID": "about.html",
