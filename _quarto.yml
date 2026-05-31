@@ -16,11 +16,42 @@ website:
         text: "Relative word frequencies"
       - href: "ToK_baseline.qmd"
         text: "Baselines"
+
     right:
       - text: "About"
         href: about.qmd
       - icon: github
         href: "https://github.com/DigitalHistory-Lund/ToK-explorer"
+  sidebar:
+    contents:
+      - section: Overview
+        contents:
+        - text: "Exploration"
+          href: index.qmd
+        - href: "ToK_relative.qmd"
+          text: "Relative word frequencies"
+        - href: "ToK_baseline.qmd"
+          text: "Baselines"
+
+      - section: Chamber 1
+        contents:
+        - href: ToK_exploration.chamber1.qmd
+          text: Exploration
+        - href: ToK_baseline.chamber1.qmd
+          text: Baselines
+        - href: ToK_relative.chamber1.qmd
+          text: "Relative word frequencies"
+
+      - section: Chamber 2
+        contents:
+        - href: ToK_exploration.chamber2.qmd
+          text: Exploration
+        - href: ToK_baseline.chamber2.qmd
+          text: Baselines
+        - href: ToK_relative.chamber2.qmd
+          text: "Relative word frequencies"
+
+
 format:
   html:
     theme:

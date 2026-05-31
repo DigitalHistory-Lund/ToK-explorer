@@ -1,5 +1,6 @@
 import subprocess
 from pathlib import Path
+import re
 
 here = Path(__file__).parent
 
@@ -50,3 +51,30 @@ authors:
 
     with open(out_file, "w", encoding="utf8") as f:
         f.write(content)
+
+for qmd in here.glob("*.qmd"):
+    if ".chamber" in qmd.name:
+        continue
+    elif qmd.name == "about.qmd":
+        continue
+
+    print("Chamberizing", qmd)
+    if qmd.name == "index.qmd":
+        out_base = "ToK_exploration"
+    else:
+        out_base = qmd.name.split(".")[0]
+
+    raw_content = qmd.open().read()
+    for chamber in {1, 2}:
+        out_name = out_base + f".chamber{chamber}.qmd"
+        out_file = qmd.parent / out_name
+
+        out_content = raw_content.replace(
+            "import tmp_db", f"import tmp_db{chamber} as tmp_db"
+        )
+
+        out_content = out_content.replace(
+            "\njupyter: tok", f" -- Chamber {chamber}\njupyter: tok"
+        )
+        out_file.write_text(out_content)
+        print("Wrote", out_name)
