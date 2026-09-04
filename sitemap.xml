@@ -2,39 +2,83 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/index.html</loc>
-    <lastmod>2026-07-04T22:22:40.765Z</lastmod>
+    <lastmod>2026-09-04T12:26:04.230Z</lastmod>
   </url>
   <url>
-    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_relative.html</loc>
-    <lastmod>2026-07-04T22:22:41.095Z</lastmod>
+    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_word_relative.html</loc>
+    <lastmod>2026-09-04T12:32:50.601Z</lastmod>
   </url>
   <url>
-    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_relative.chamber1.html</loc>
-    <lastmod>2026-07-04T22:22:41.096Z</lastmod>
+    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_word_relative.chamber1.html</loc>
+    <lastmod>2026-09-04T12:32:50.601Z</lastmod>
   </url>
   <url>
-    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_exploration.chamber1.html</loc>
-    <lastmod>2026-07-04T22:22:41.096Z</lastmod>
+    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_word_baseline.chamber2.html</loc>
+    <lastmod>2026-09-04T12:32:50.601Z</lastmod>
   </url>
   <url>
-    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_baseline.chamber2.html</loc>
-    <lastmod>2026-07-04T22:22:41.096Z</lastmod>
+    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_speakers.html</loc>
+    <lastmod>2026-09-04T12:32:50.602Z</lastmod>
   </url>
   <url>
-    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_baseline.chamber1.html</loc>
-    <lastmod>2026-07-04T22:22:41.096Z</lastmod>
-  </url>
-  <url>
-    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_baseline.html</loc>
-    <lastmod>2026-07-04T22:22:40.426Z</lastmod>
-  </url>
-  <url>
-    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_exploration.chamber2.html</loc>
-    <lastmod>2026-07-04T22:22:41.096Z</lastmod>
+    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_speakers.chamber1.html</loc>
+    <lastmod>2026-09-04T12:32:50.602Z</lastmod>
   </url>
   <url>
     <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_relative.chamber2.html</loc>
-    <lastmod>2026-07-04T22:22:41.097Z</lastmod>
+    <lastmod>2026-09-04T12:32:50.602Z</lastmod>
+  </url>
+  <url>
+    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_paper_figures.html</loc>
+    <lastmod>2026-09-04T12:32:50.603Z</lastmod>
+  </url>
+  <url>
+    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_damer_fru.chamber2.html</loc>
+    <lastmod>2026-09-04T12:32:50.603Z</lastmod>
+  </url>
+  <url>
+    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_baseline.html</loc>
+    <lastmod>2026-09-04T12:32:50.601Z</lastmod>
+  </url>
+  <url>
+    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_baseline.chamber1.html</loc>
+    <lastmod>2026-09-04T12:32:50.602Z</lastmod>
+  </url>
+  <url>
+    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_baseline.chamber2.html</loc>
+    <lastmod>2026-09-04T12:32:50.602Z</lastmod>
+  </url>
+  <url>
+    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_damer_fru.chamber1.html</loc>
+    <lastmod>2026-09-04T12:32:50.603Z</lastmod>
+  </url>
+  <url>
+    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_damer_fru.html</loc>
+    <lastmod>2026-09-04T12:32:50.603Z</lastmod>
+  </url>
+  <url>
+    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_relative.chamber1.html</loc>
+    <lastmod>2026-09-04T12:32:50.602Z</lastmod>
+  </url>
+  <url>
+    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_relative.html</loc>
+    <lastmod>2026-09-04T12:32:50.602Z</lastmod>
+  </url>
+  <url>
+    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_speakers.chamber2.html</loc>
+    <lastmod>2026-09-04T12:32:50.602Z</lastmod>
+  </url>
+  <url>
+    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_word_baseline.chamber1.html</loc>
+    <lastmod>2026-09-04T12:32:50.601Z</lastmod>
+  </url>
+  <url>
+    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_word_baseline.html</loc>
+    <lastmod>2026-09-04T12:32:50.600Z</lastmod>
+  </url>
+  <url>
+    <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/ToK_word_relative.chamber2.html</loc>
+    <lastmod>2026-09-04T12:32:50.601Z</lastmod>
   </url>
   <url>
     <loc>https://DigitalHistory-Lund.github.io/ToK-explorer/about.html</loc>

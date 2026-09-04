@@ -1,202 +1,526 @@
 [
   {
-    "objectID": "index.html#looking-at-incidence-of-keyword-groups",
-    "href": "index.html#looking-at-incidence-of-keyword-groups",
-    "title": "Tal om Kvinnor (ToK)",
-    "section": "Looking at incidence of keyword groups",
-    "text": "Looking at incidence of keyword groups",
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "ToK-explorer",
+    "section": "",
+    "text": "This site accompanies the Tal om Kvinnor project at Lund University. It reports how the Swedish Riksdag spoke about women between 1900 and 1940, using the openly published Swedish Parliament Corpus as its raw material.\nEach page presents one slice of that story. Baselines report raw utterance and word counts; Relative word frequencies report each category’s share of the total. Every headline view is available for the whole period and for either chamber separately.",
     "crumbs": [
       "Home",
       "Overview",
-      "Exploration"
+      "About"
     ]
   },
   {
-    "objectID": "index.html#looking-at-utterances-by-keywords-and-gender",
-    "href": "index.html#looking-at-utterances-by-keywords-and-gender",
-    "title": "Tal om Kvinnor (ToK)",
-    "section": "Looking at utterances by keywords and gender",
-    "text": "Looking at utterances by keywords and gender\n\n\n[None, 'man', 'woman']\n\n\n                                                    \n\n\n[None, 'man', 'woman']\n\n\n                                                    \n\n\n[None, 'man', 'woman']\n\n\n                                                    \n\n\n[None, 'man', 'woman']",
+    "objectID": "index.html#terminology",
+    "href": "index.html#terminology",
+    "title": "ToK-explorer",
+    "section": "Terminology",
+    "text": "Terminology\nThree keyword categories are used throughout the site:\n\nkvinna 1 — a single broad wildcard kvinn* that matches any word starting with kvinn.\nKvinna 2 — a hand-picked list of generic feminine terms, pronouns and kin relations (dam, dotter*, flick*, mor, …).\nKvinna 3 — a large list of specific and often work-related female titles (barnmorska, hushållerska, piga*, …).\n\nThe categories are guaranteed pairwise disjoint by an automated check; where a name appears in more than one list a Kvinna 2 entry always wins over Kvinna 3. Older pages sometimes show a kvinna all line — that is the union of all three, i.e. any utterance/word matching at least one category. It sits above the individual category lines by construction.",
     "crumbs": [
       "Home",
       "Overview",
-      "Exploration"
+      "About"
     ]
   },
   {
-    "objectID": "index.html#looking-at-utterances-by-keywords-and-party",
-    "href": "index.html#looking-at-utterances-by-keywords-and-party",
-    "title": "Tal om Kvinnor (ToK)",
-    "section": "Looking at utterances by keywords and party",
-    "text": "Looking at utterances by keywords and party",
+    "objectID": "index.html#corpus-figures",
+    "href": "index.html#corpus-figures",
+    "title": "ToK-explorer",
+    "section": "Corpus figures",
+    "text": "Corpus figures\n\n\n        \n        \n        \n\n\nThe three heatmaps below split the corpus by chamber and by the speaker’s recorded gender, and count both utterances and words. The first heatmap covers everything before 1920; the second covers the whole 1900–1940 window; the third covers 1920 onwards. The two blocks of years bracket the introduction of women’s suffrage in 1919, which lets us see how the gendered composition of the recorded discourse shifts once women can vote.\n\nBefore 1920\n\n\n57,417 utterances · 38,303,709 words\n\n\n                                                    \n\n\n\n\n\n\n\n\n\nChamber 1 · man\nChamber 1 · woman\nChamber 1 · unknown\nChamber 2 · man\nChamber 2 · woman\nChamber 2 · unknown\n\n\nmetric\n\n\n\n\n\n\n\n\n\n\nutterances\n20567\n0\n1264\n33602\n0\n1984\n\n\nwords\n13086863\n0\n632490\n23429868\n0\n1154488\n\n\n\n\n\n\n\n\n\nFull period (1900–1940)\n\n\n141,379 utterances · 92,595,326 words\n\n\n                                                    \n\n\n\n\n\n\n\n\n\nChamber 1 · man\nChamber 1 · woman\nChamber 1 · unknown\nChamber 2 · man\nChamber 2 · woman\nChamber 2 · unknown\n\n\nmetric\n\n\n\n\n\n\n\n\n\n\nutterances\n57448\n123\n2141\n78034\n558\n3075\n\n\nwords\n36588819\n94426\n1123647\n52670647\n327998\n1789789\n\n\n\n\n\n\n\n\n\n1920 onwards\n\n\n83,962 utterances · 54,291,617 words\n\n\n                                                    \n\n\n\n\n\n\n\n\n\nChamber 1 · man\nChamber 1 · woman\nChamber 1 · unknown\nChamber 2 · man\nChamber 2 · woman\nChamber 2 · unknown\n\n\nmetric\n\n\n\n\n\n\n\n\n\n\nutterances\n36881\n123\n877\n44432\n558\n1091\n\n\nwords\n23501956\n94426\n491157\n29240779\n327998\n635301",
     "crumbs": [
       "Home",
       "Overview",
-      "Exploration"
+      "About"
     ]
   },
   {
-    "objectID": "index.html#looking-at-number-of-speakers-with-utterances-containing-keywords-by-gender",
-    "href": "index.html#looking-at-number-of-speakers-with-utterances-containing-keywords-by-gender",
-    "title": "Tal om Kvinnor (ToK)",
-    "section": "Looking at number of speakers with utterances containing keywords, by gender",
-    "text": "Looking at number of speakers with utterances containing keywords, by gender",
+    "objectID": "index.html#data-provenance",
+    "href": "index.html#data-provenance",
+    "title": "ToK-explorer",
+    "section": "Data provenance",
+    "text": "Data provenance\nThe two upstream sources are pinned by SHA-256 in tok_preparer/src/download.py. The exact commits used to render this build are reported below.\n\n\nRiksdagen speeches:  records_speeches v1.6.0\n                     sha256: a1c1310971214d4f836b72f48503b8d86bd3ec80763738e884a02e45a8f49ebf\nRiksdagen persons:   persons.sqlite   v1.2.2\n                     sha256: dfc0db29039715440b53d9820873c8c163fc72b5acdd207917e58bd4869ab5fd\n\nToK-explorer  parent HEAD: 346383dbe094 — Expand figure gallery based on new corpus\ntok_preparer  submodule HEAD: 3e697c4b88f4 — remove pandas FutureWarning",
     "crumbs": [
       "Home",
       "Overview",
-      "Exploration"
+      "About"
     ]
   },
   {
-    "objectID": "index.html#looking-at-number-of-speakers-with-utterances-containing-keywords-by-party",
-    "href": "index.html#looking-at-number-of-speakers-with-utterances-containing-keywords-by-party",
-    "title": "Tal om Kvinnor (ToK)",
-    "section": "Looking at number of speakers with utterances containing keywords, by party",
-    "text": "Looking at number of speakers with utterances containing keywords, by party",
-    "crumbs": [
-      "Home",
-      "Overview",
-      "Exploration"
-    ]
-  },
-  {
-    "objectID": "index.html#utterances-by-gender-party-and-decade",
-    "href": "index.html#utterances-by-gender-party-and-decade",
-    "title": "Tal om Kvinnor (ToK)",
-    "section": "Utterances by gender, party and decade",
-    "text": "Utterances by gender, party and decade",
-    "crumbs": [
-      "Home",
-      "Overview",
-      "Exploration"
-    ]
-  },
-  {
-    "objectID": "ToK_relative.html#looking-at-incidence-of-keyword-groups",
-    "href": "ToK_relative.html#looking-at-incidence-of-keyword-groups",
+    "objectID": "ToK_word_relative.html#category-counts-per-year",
+    "href": "ToK_word_relative.html#category-counts-per-year",
     "title": "Relative word frequencies",
-    "section": "Looking at incidence of keyword groups",
-    "text": "Looking at incidence of keyword groups",
+    "section": "Category counts per year",
+    "text": "Category counts per year",
     "crumbs": [
       "Home",
       "Overview",
-      "Relative word frequencies"
+      "Relative word frequencies (words)"
     ]
   },
   {
-    "objectID": "ToK_relative.chamber1.html#looking-at-incidence-of-keyword-groups",
-    "href": "ToK_relative.chamber1.html#looking-at-incidence-of-keyword-groups",
+    "objectID": "ToK_word_relative.html#relative-frequencies-per-year",
+    "href": "ToK_word_relative.html#relative-frequencies-per-year",
+    "title": "Relative word frequencies",
+    "section": "Relative frequencies per year",
+    "text": "Relative frequencies per year",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Relative word frequencies (words)"
+    ]
+  },
+  {
+    "objectID": "ToK_word_relative.html#split-by-gender",
+    "href": "ToK_word_relative.html#split-by-gender",
+    "title": "Relative word frequencies",
+    "section": "Split by gender",
+    "text": "Split by gender",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Relative word frequencies (words)"
+    ]
+  },
+  {
+    "objectID": "ToK_word_relative.html#relative-frequencies-by-party",
+    "href": "ToK_word_relative.html#relative-frequencies-by-party",
+    "title": "Relative word frequencies",
+    "section": "Relative frequencies by party",
+    "text": "Relative frequencies by party",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Relative word frequencies (words)"
+    ]
+  },
+  {
+    "objectID": "ToK_word_relative.chamber1.html#category-counts-per-year",
+    "href": "ToK_word_relative.chamber1.html#category-counts-per-year",
     "title": "Relative word frequencies – Chamber 1",
-    "section": "Looking at incidence of keyword groups",
-    "text": "Looking at incidence of keyword groups",
+    "section": "Category counts per year",
+    "text": "Category counts per year",
     "crumbs": [
       "Home",
       "Chamber 1",
+      "Relative word frequencies (words)"
+    ]
+  },
+  {
+    "objectID": "ToK_word_relative.chamber1.html#relative-frequencies-per-year",
+    "href": "ToK_word_relative.chamber1.html#relative-frequencies-per-year",
+    "title": "Relative word frequencies – Chamber 1",
+    "section": "Relative frequencies per year",
+    "text": "Relative frequencies per year",
+    "crumbs": [
+      "Home",
+      "Chamber 1",
+      "Relative word frequencies (words)"
+    ]
+  },
+  {
+    "objectID": "ToK_word_relative.chamber1.html#split-by-gender",
+    "href": "ToK_word_relative.chamber1.html#split-by-gender",
+    "title": "Relative word frequencies – Chamber 1",
+    "section": "Split by gender",
+    "text": "Split by gender",
+    "crumbs": [
+      "Home",
+      "Chamber 1",
+      "Relative word frequencies (words)"
+    ]
+  },
+  {
+    "objectID": "ToK_word_relative.chamber1.html#relative-frequencies-by-party",
+    "href": "ToK_word_relative.chamber1.html#relative-frequencies-by-party",
+    "title": "Relative word frequencies – Chamber 1",
+    "section": "Relative frequencies by party",
+    "text": "Relative frequencies by party",
+    "crumbs": [
+      "Home",
+      "Chamber 1",
+      "Relative word frequencies (words)"
+    ]
+  },
+  {
+    "objectID": "ToK_word_baseline.chamber2.html#absolute-totals-per-year",
+    "href": "ToK_word_baseline.chamber2.html#absolute-totals-per-year",
+    "title": "Word baseline – Chamber 2",
+    "section": "Absolute totals per year",
+    "text": "Absolute totals per year",
+    "crumbs": [
+      "Home",
+      "Chamber 2",
+      "Word baselines"
+    ]
+  },
+  {
+    "objectID": "ToK_word_baseline.chamber2.html#category-totals-per-year",
+    "href": "ToK_word_baseline.chamber2.html#category-totals-per-year",
+    "title": "Word baseline – Chamber 2",
+    "section": "Category totals per year",
+    "text": "Category totals per year",
+    "crumbs": [
+      "Home",
+      "Chamber 2",
+      "Word baselines"
+    ]
+  },
+  {
+    "objectID": "ToK_word_baseline.chamber2.html#split-by-chamber",
+    "href": "ToK_word_baseline.chamber2.html#split-by-chamber",
+    "title": "Word baseline – Chamber 2",
+    "section": "Split by chamber",
+    "text": "Split by chamber",
+    "crumbs": [
+      "Home",
+      "Chamber 2",
+      "Word baselines"
+    ]
+  },
+  {
+    "objectID": "ToK_speakers.html#distinct-speakers-per-year",
+    "href": "ToK_speakers.html#distinct-speakers-per-year",
+    "title": "Speakers",
+    "section": "Distinct speakers per year",
+    "text": "Distinct speakers per year",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Speakers"
+    ]
+  },
+  {
+    "objectID": "ToK_speakers.html#distinct-speakers-by-gender",
+    "href": "ToK_speakers.html#distinct-speakers-by-gender",
+    "title": "Speakers",
+    "section": "Distinct speakers by gender",
+    "text": "Distinct speakers by gender",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Speakers"
+    ]
+  },
+  {
+    "objectID": "ToK_speakers.html#distinct-speakers-by-party",
+    "href": "ToK_speakers.html#distinct-speakers-by-party",
+    "title": "Speakers",
+    "section": "Distinct speakers by party",
+    "text": "Distinct speakers by party",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Speakers"
+    ]
+  },
+  {
+    "objectID": "ToK_speakers.chamber1.html#distinct-speakers-per-year",
+    "href": "ToK_speakers.chamber1.html#distinct-speakers-per-year",
+    "title": "Speakers – Chamber 1",
+    "section": "Distinct speakers per year",
+    "text": "Distinct speakers per year",
+    "crumbs": [
+      "Home",
+      "Chamber 1",
+      "Speakers"
+    ]
+  },
+  {
+    "objectID": "ToK_speakers.chamber1.html#distinct-speakers-by-gender",
+    "href": "ToK_speakers.chamber1.html#distinct-speakers-by-gender",
+    "title": "Speakers – Chamber 1",
+    "section": "Distinct speakers by gender",
+    "text": "Distinct speakers by gender",
+    "crumbs": [
+      "Home",
+      "Chamber 1",
+      "Speakers"
+    ]
+  },
+  {
+    "objectID": "ToK_speakers.chamber1.html#distinct-speakers-by-party",
+    "href": "ToK_speakers.chamber1.html#distinct-speakers-by-party",
+    "title": "Speakers – Chamber 1",
+    "section": "Distinct speakers by party",
+    "text": "Distinct speakers by party",
+    "crumbs": [
+      "Home",
+      "Chamber 1",
+      "Speakers"
+    ]
+  },
+  {
+    "objectID": "ToK_relative.chamber2.html#category-counts-per-year",
+    "href": "ToK_relative.chamber2.html#category-counts-per-year",
+    "title": "Relative utterance frequencies – Chamber 2",
+    "section": "Category counts per year",
+    "text": "Category counts per year",
+    "crumbs": [
+      "Home",
+      "Chamber 2",
       "Relative word frequencies"
     ]
   },
   {
-    "objectID": "ToK_exploration.chamber1.html#looking-at-incidence-of-keyword-groups",
-    "href": "ToK_exploration.chamber1.html#looking-at-incidence-of-keyword-groups",
-    "title": "Tal om Kvinnor (ToK) – Chamber 1",
-    "section": "Looking at incidence of keyword groups",
-    "text": "Looking at incidence of keyword groups",
-    "crumbs": [
-      "Home",
-      "Chamber 1",
-      "Exploration"
-    ]
-  },
-  {
-    "objectID": "ToK_exploration.chamber1.html#looking-at-utterances-by-keywords-and-gender",
-    "href": "ToK_exploration.chamber1.html#looking-at-utterances-by-keywords-and-gender",
-    "title": "Tal om Kvinnor (ToK) – Chamber 1",
-    "section": "Looking at utterances by keywords and gender",
-    "text": "Looking at utterances by keywords and gender\n\n\n['man', None, 'woman']\n\n\n                                                    \n\n\n['man', None, 'woman']\n\n\n                                                    \n\n\n['man', None, 'woman']\n\n\n                                                    \n\n\n['man', None, 'woman']",
-    "crumbs": [
-      "Home",
-      "Chamber 1",
-      "Exploration"
-    ]
-  },
-  {
-    "objectID": "ToK_exploration.chamber1.html#looking-at-utterances-by-keywords-and-party",
-    "href": "ToK_exploration.chamber1.html#looking-at-utterances-by-keywords-and-party",
-    "title": "Tal om Kvinnor (ToK) – Chamber 1",
-    "section": "Looking at utterances by keywords and party",
-    "text": "Looking at utterances by keywords and party",
-    "crumbs": [
-      "Home",
-      "Chamber 1",
-      "Exploration"
-    ]
-  },
-  {
-    "objectID": "ToK_exploration.chamber1.html#looking-at-number-of-speakers-with-utterances-containing-keywords-by-gender",
-    "href": "ToK_exploration.chamber1.html#looking-at-number-of-speakers-with-utterances-containing-keywords-by-gender",
-    "title": "Tal om Kvinnor (ToK) – Chamber 1",
-    "section": "Looking at number of speakers with utterances containing keywords, by gender",
-    "text": "Looking at number of speakers with utterances containing keywords, by gender",
-    "crumbs": [
-      "Home",
-      "Chamber 1",
-      "Exploration"
-    ]
-  },
-  {
-    "objectID": "ToK_exploration.chamber1.html#looking-at-number-of-speakers-with-utterances-containing-keywords-by-party",
-    "href": "ToK_exploration.chamber1.html#looking-at-number-of-speakers-with-utterances-containing-keywords-by-party",
-    "title": "Tal om Kvinnor (ToK) – Chamber 1",
-    "section": "Looking at number of speakers with utterances containing keywords, by party",
-    "text": "Looking at number of speakers with utterances containing keywords, by party",
-    "crumbs": [
-      "Home",
-      "Chamber 1",
-      "Exploration"
-    ]
-  },
-  {
-    "objectID": "ToK_exploration.chamber1.html#utterances-by-gender-party-and-decade",
-    "href": "ToK_exploration.chamber1.html#utterances-by-gender-party-and-decade",
-    "title": "Tal om Kvinnor (ToK) – Chamber 1",
-    "section": "Utterances by gender, party and decade",
-    "text": "Utterances by gender, party and decade",
-    "crumbs": [
-      "Home",
-      "Chamber 1",
-      "Exploration"
-    ]
-  },
-  {
-    "objectID": "ToK_baseline.chamber2.html#establishing-baselines",
-    "href": "ToK_baseline.chamber2.html#establishing-baselines",
-    "title": "Exploring Baselines – Chamber 2",
-    "section": "Establishing baselines",
-    "text": "Establishing baselines",
+    "objectID": "ToK_relative.chamber2.html#relative-frequencies-per-year",
+    "href": "ToK_relative.chamber2.html#relative-frequencies-per-year",
+    "title": "Relative utterance frequencies – Chamber 2",
+    "section": "Relative frequencies per year",
+    "text": "Relative frequencies per year",
     "crumbs": [
       "Home",
       "Chamber 2",
-      "Baselines"
+      "Relative word frequencies"
     ]
   },
   {
-    "objectID": "ToK_baseline.chamber1.html#establishing-baselines",
-    "href": "ToK_baseline.chamber1.html#establishing-baselines",
-    "title": "Exploring Baselines – Chamber 1",
-    "section": "Establishing baselines",
-    "text": "Establishing baselines",
+    "objectID": "ToK_relative.chamber2.html#split-by-gender",
+    "href": "ToK_relative.chamber2.html#split-by-gender",
+    "title": "Relative utterance frequencies – Chamber 2",
+    "section": "Split by gender",
+    "text": "Split by gender",
     "crumbs": [
       "Home",
-      "Chamber 1",
-      "Baselines"
+      "Chamber 2",
+      "Relative word frequencies"
     ]
   },
   {
-    "objectID": "ToK_baseline.html#establishing-baselines",
-    "href": "ToK_baseline.html#establishing-baselines",
-    "title": "Exploring Baselines",
-    "section": "Establishing baselines",
-    "text": "Establishing baselines",
+    "objectID": "ToK_relative.chamber2.html#relative-frequencies-by-party",
+    "href": "ToK_relative.chamber2.html#relative-frequencies-by-party",
+    "title": "Relative utterance frequencies – Chamber 2",
+    "section": "Relative frequencies by party",
+    "text": "Relative frequencies by party",
+    "crumbs": [
+      "Home",
+      "Chamber 2",
+      "Relative word frequencies"
+    ]
+  },
+  {
+    "objectID": "ToK_paper_figures.html#plot_keyword_coverage",
+    "href": "ToK_paper_figures.html#plot_keyword_coverage",
+    "title": "Paper figures (all plot_ functions)",
+    "section": "plot_keyword_coverage",
+    "text": "plot_keyword_coverage",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Paper figures (all plot_ functions)"
+    ]
+  },
+  {
+    "objectID": "ToK_paper_figures.html#plot_keyword_coverage_by_pattern",
+    "href": "ToK_paper_figures.html#plot_keyword_coverage_by_pattern",
+    "title": "Paper figures (all plot_ functions)",
+    "section": "plot_keyword_coverage_by_pattern",
+    "text": "plot_keyword_coverage_by_pattern",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Paper figures (all plot_ functions)"
+    ]
+  },
+  {
+    "objectID": "ToK_paper_figures.html#plot_keyword_shares_by_pattern",
+    "href": "ToK_paper_figures.html#plot_keyword_shares_by_pattern",
+    "title": "Paper figures (all plot_ functions)",
+    "section": "plot_keyword_shares_by_pattern",
+    "text": "plot_keyword_shares_by_pattern",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Paper figures (all plot_ functions)"
+    ]
+  },
+  {
+    "objectID": "ToK_paper_figures.html#plot_kvinna_net_composition",
+    "href": "ToK_paper_figures.html#plot_kvinna_net_composition",
+    "title": "Paper figures (all plot_ functions)",
+    "section": "plot_kvinna_net_composition",
+    "text": "plot_kvinna_net_composition",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Paper figures (all plot_ functions)"
+    ]
+  },
+  {
+    "objectID": "ToK_paper_figures.html#plot_kvinna_all_by_chamber",
+    "href": "ToK_paper_figures.html#plot_kvinna_all_by_chamber",
+    "title": "Paper figures (all plot_ functions)",
+    "section": "plot_kvinna_all_by_chamber",
+    "text": "plot_kvinna_all_by_chamber",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Paper figures (all plot_ functions)"
+    ]
+  },
+  {
+    "objectID": "ToK_paper_figures.html#plot_category_composition",
+    "href": "ToK_paper_figures.html#plot_category_composition",
+    "title": "Paper figures (all plot_ functions)",
+    "section": "plot_category_composition",
+    "text": "plot_category_composition",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Paper figures (all plot_ functions)"
+    ]
+  },
+  {
+    "objectID": "ToK_paper_figures.html#plot_utterance_share_by_gender",
+    "href": "ToK_paper_figures.html#plot_utterance_share_by_gender",
+    "title": "Paper figures (all plot_ functions)",
+    "section": "plot_utterance_share_by_gender",
+    "text": "plot_utterance_share_by_gender",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Paper figures (all plot_ functions)"
+    ]
+  },
+  {
+    "objectID": "ToK_paper_figures.html#plot_word_share_by_gender",
+    "href": "ToK_paper_figures.html#plot_word_share_by_gender",
+    "title": "Paper figures (all plot_ functions)",
+    "section": "plot_word_share_by_gender",
+    "text": "plot_word_share_by_gender",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Paper figures (all plot_ functions)"
+    ]
+  },
+  {
+    "objectID": "ToK_paper_figures.html#plot_party_share",
+    "href": "ToK_paper_figures.html#plot_party_share",
+    "title": "Paper figures (all plot_ functions)",
+    "section": "plot_party_share",
+    "text": "plot_party_share",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Paper figures (all plot_ functions)"
+    ]
+  },
+  {
+    "objectID": "ToK_paper_figures.html#plot_speaker_share_distribution",
+    "href": "ToK_paper_figures.html#plot_speaker_share_distribution",
+    "title": "Paper figures (all plot_ functions)",
+    "section": "plot_speaker_share_distribution",
+    "text": "plot_speaker_share_distribution",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Paper figures (all plot_ functions)"
+    ]
+  },
+  {
+    "objectID": "ToK_paper_figures.html#plot_top_male_speakers",
+    "href": "ToK_paper_figures.html#plot_top_male_speakers",
+    "title": "Paper figures (all plot_ functions)",
+    "section": "plot_top_male_speakers",
+    "text": "plot_top_male_speakers",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Paper figures (all plot_ functions)"
+    ]
+  },
+  {
+    "objectID": "ToK_paper_figures.html#plot_speaker_rate_vs_volume",
+    "href": "ToK_paper_figures.html#plot_speaker_rate_vs_volume",
+    "title": "Paper figures (all plot_ functions)",
+    "section": "plot_speaker_rate_vs_volume",
+    "text": "plot_speaker_rate_vs_volume",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Paper figures (all plot_ functions)"
+    ]
+  },
+  {
+    "objectID": "ToK_damer_fru.chamber2.html#raw-word-counts-per-year",
+    "href": "ToK_damer_fru.chamber2.html#raw-word-counts-per-year",
+    "title": "Greetings: damer & fru – Chamber 2",
+    "section": "Raw word counts per year",
+    "text": "Raw word counts per year",
+    "crumbs": [
+      "Home",
+      "Chamber 2",
+      "damer & fru"
+    ]
+  },
+  {
+    "objectID": "ToK_damer_fru.chamber2.html#utterances-containing-the-word-per-year",
+    "href": "ToK_damer_fru.chamber2.html#utterances-containing-the-word-per-year",
+    "title": "Greetings: damer & fru – Chamber 2",
+    "section": "Utterances containing the word per year",
+    "text": "Utterances containing the word per year",
+    "crumbs": [
+      "Home",
+      "Chamber 2",
+      "damer & fru"
+    ]
+  },
+  {
+    "objectID": "ToK_damer_fru.chamber2.html#relative-frequency-of-utterances-containing-the-word",
+    "href": "ToK_damer_fru.chamber2.html#relative-frequency-of-utterances-containing-the-word",
+    "title": "Greetings: damer & fru – Chamber 2",
+    "section": "Relative frequency of utterances containing the word",
+    "text": "Relative frequency of utterances containing the word",
+    "crumbs": [
+      "Home",
+      "Chamber 2",
+      "damer & fru"
+    ]
+  },
+  {
+    "objectID": "ToK_damer_fru.chamber2.html#split-by-speaker-gender",
+    "href": "ToK_damer_fru.chamber2.html#split-by-speaker-gender",
+    "title": "Greetings: damer & fru – Chamber 2",
+    "section": "Split by speaker gender",
+    "text": "Split by speaker gender",
+    "crumbs": [
+      "Home",
+      "Chamber 2",
+      "damer & fru"
+    ]
+  },
+  {
+    "objectID": "ToK_damer_fru.chamber2.html#split-by-party",
+    "href": "ToK_damer_fru.chamber2.html#split-by-party",
+    "title": "Greetings: damer & fru – Chamber 2",
+    "section": "Split by party",
+    "text": "Split by party",
+    "crumbs": [
+      "Home",
+      "Chamber 2",
+      "damer & fru"
+    ]
+  },
+  {
+    "objectID": "ToK_damer_fru.chamber2.html#split-by-chamber",
+    "href": "ToK_damer_fru.chamber2.html#split-by-chamber",
+    "title": "Greetings: damer & fru – Chamber 2",
+    "section": "Split by chamber",
+    "text": "Split by chamber",
+    "crumbs": [
+      "Home",
+      "Chamber 2",
+      "damer & fru"
+    ]
+  },
+  {
+    "objectID": "ToK_baseline.html#absolute-totals-per-year",
+    "href": "ToK_baseline.html#absolute-totals-per-year",
+    "title": "Baseline",
+    "section": "Absolute totals per year",
+    "text": "Absolute totals per year",
     "crumbs": [
       "Home",
       "Overview",
@@ -204,87 +528,495 @@
     ]
   },
   {
-    "objectID": "ToK_exploration.chamber2.html#looking-at-incidence-of-keyword-groups",
-    "href": "ToK_exploration.chamber2.html#looking-at-incidence-of-keyword-groups",
-    "title": "Tal om Kvinnor (ToK) – Chamber 2",
-    "section": "Looking at incidence of keyword groups",
-    "text": "Looking at incidence of keyword groups",
+    "objectID": "ToK_baseline.html#category-totals-per-year",
+    "href": "ToK_baseline.html#category-totals-per-year",
+    "title": "Baseline",
+    "section": "Category totals per year",
+    "text": "Category totals per year",
     "crumbs": [
       "Home",
-      "Chamber 2",
-      "Exploration"
+      "Overview",
+      "Baselines"
     ]
   },
   {
-    "objectID": "ToK_exploration.chamber2.html#looking-at-utterances-by-keywords-and-gender",
-    "href": "ToK_exploration.chamber2.html#looking-at-utterances-by-keywords-and-gender",
-    "title": "Tal om Kvinnor (ToK) – Chamber 2",
-    "section": "Looking at utterances by keywords and gender",
-    "text": "Looking at utterances by keywords and gender\n\n\n[None, 'man', 'woman']\n\n\n                                                    \n\n\n[None, 'man', 'woman']\n\n\n                                                    \n\n\n[None, 'man', 'woman']\n\n\n                                                    \n\n\n[None, 'man', 'woman']",
+    "objectID": "ToK_baseline.html#split-by-chamber",
+    "href": "ToK_baseline.html#split-by-chamber",
+    "title": "Baseline",
+    "section": "Split by chamber",
+    "text": "Split by chamber",
     "crumbs": [
       "Home",
-      "Chamber 2",
-      "Exploration"
+      "Overview",
+      "Baselines"
     ]
   },
   {
-    "objectID": "ToK_exploration.chamber2.html#looking-at-utterances-by-keywords-and-party",
-    "href": "ToK_exploration.chamber2.html#looking-at-utterances-by-keywords-and-party",
-    "title": "Tal om Kvinnor (ToK) – Chamber 2",
-    "section": "Looking at utterances by keywords and party",
-    "text": "Looking at utterances by keywords and party",
+    "objectID": "ToK_baseline.chamber1.html#absolute-totals-per-year",
+    "href": "ToK_baseline.chamber1.html#absolute-totals-per-year",
+    "title": "Baseline – Chamber 1",
+    "section": "Absolute totals per year",
+    "text": "Absolute totals per year",
     "crumbs": [
       "Home",
-      "Chamber 2",
-      "Exploration"
+      "Chamber 1",
+      "Baselines"
     ]
   },
   {
-    "objectID": "ToK_exploration.chamber2.html#looking-at-number-of-speakers-with-utterances-containing-keywords-by-gender",
-    "href": "ToK_exploration.chamber2.html#looking-at-number-of-speakers-with-utterances-containing-keywords-by-gender",
-    "title": "Tal om Kvinnor (ToK) – Chamber 2",
-    "section": "Looking at number of speakers with utterances containing keywords, by gender",
-    "text": "Looking at number of speakers with utterances containing keywords, by gender",
+    "objectID": "ToK_baseline.chamber1.html#category-totals-per-year",
+    "href": "ToK_baseline.chamber1.html#category-totals-per-year",
+    "title": "Baseline – Chamber 1",
+    "section": "Category totals per year",
+    "text": "Category totals per year",
     "crumbs": [
       "Home",
-      "Chamber 2",
-      "Exploration"
+      "Chamber 1",
+      "Baselines"
     ]
   },
   {
-    "objectID": "ToK_exploration.chamber2.html#looking-at-number-of-speakers-with-utterances-containing-keywords-by-party",
-    "href": "ToK_exploration.chamber2.html#looking-at-number-of-speakers-with-utterances-containing-keywords-by-party",
-    "title": "Tal om Kvinnor (ToK) – Chamber 2",
-    "section": "Looking at number of speakers with utterances containing keywords, by party",
-    "text": "Looking at number of speakers with utterances containing keywords, by party",
+    "objectID": "ToK_baseline.chamber1.html#split-by-chamber",
+    "href": "ToK_baseline.chamber1.html#split-by-chamber",
+    "title": "Baseline – Chamber 1",
+    "section": "Split by chamber",
+    "text": "Split by chamber",
     "crumbs": [
       "Home",
-      "Chamber 2",
-      "Exploration"
+      "Chamber 1",
+      "Baselines"
     ]
   },
   {
-    "objectID": "ToK_exploration.chamber2.html#utterances-by-gender-party-and-decade",
-    "href": "ToK_exploration.chamber2.html#utterances-by-gender-party-and-decade",
-    "title": "Tal om Kvinnor (ToK) – Chamber 2",
-    "section": "Utterances by gender, party and decade",
-    "text": "Utterances by gender, party and decade",
+    "objectID": "ToK_baseline.chamber2.html#absolute-totals-per-year",
+    "href": "ToK_baseline.chamber2.html#absolute-totals-per-year",
+    "title": "Baseline – Chamber 2",
+    "section": "Absolute totals per year",
+    "text": "Absolute totals per year",
     "crumbs": [
       "Home",
       "Chamber 2",
-      "Exploration"
+      "Baselines"
     ]
   },
   {
-    "objectID": "ToK_relative.chamber2.html#looking-at-incidence-of-keyword-groups",
-    "href": "ToK_relative.chamber2.html#looking-at-incidence-of-keyword-groups",
-    "title": "Relative word frequencies – Chamber 2",
-    "section": "Looking at incidence of keyword groups",
-    "text": "Looking at incidence of keyword groups",
+    "objectID": "ToK_baseline.chamber2.html#category-totals-per-year",
+    "href": "ToK_baseline.chamber2.html#category-totals-per-year",
+    "title": "Baseline – Chamber 2",
+    "section": "Category totals per year",
+    "text": "Category totals per year",
     "crumbs": [
       "Home",
       "Chamber 2",
+      "Baselines"
+    ]
+  },
+  {
+    "objectID": "ToK_baseline.chamber2.html#split-by-chamber",
+    "href": "ToK_baseline.chamber2.html#split-by-chamber",
+    "title": "Baseline – Chamber 2",
+    "section": "Split by chamber",
+    "text": "Split by chamber",
+    "crumbs": [
+      "Home",
+      "Chamber 2",
+      "Baselines"
+    ]
+  },
+  {
+    "objectID": "ToK_damer_fru.chamber1.html#raw-word-counts-per-year",
+    "href": "ToK_damer_fru.chamber1.html#raw-word-counts-per-year",
+    "title": "Greetings: damer & fru – Chamber 1",
+    "section": "Raw word counts per year",
+    "text": "Raw word counts per year",
+    "crumbs": [
+      "Home",
+      "Chamber 1",
+      "damer & fru"
+    ]
+  },
+  {
+    "objectID": "ToK_damer_fru.chamber1.html#utterances-containing-the-word-per-year",
+    "href": "ToK_damer_fru.chamber1.html#utterances-containing-the-word-per-year",
+    "title": "Greetings: damer & fru – Chamber 1",
+    "section": "Utterances containing the word per year",
+    "text": "Utterances containing the word per year",
+    "crumbs": [
+      "Home",
+      "Chamber 1",
+      "damer & fru"
+    ]
+  },
+  {
+    "objectID": "ToK_damer_fru.chamber1.html#relative-frequency-of-utterances-containing-the-word",
+    "href": "ToK_damer_fru.chamber1.html#relative-frequency-of-utterances-containing-the-word",
+    "title": "Greetings: damer & fru – Chamber 1",
+    "section": "Relative frequency of utterances containing the word",
+    "text": "Relative frequency of utterances containing the word",
+    "crumbs": [
+      "Home",
+      "Chamber 1",
+      "damer & fru"
+    ]
+  },
+  {
+    "objectID": "ToK_damer_fru.chamber1.html#split-by-speaker-gender",
+    "href": "ToK_damer_fru.chamber1.html#split-by-speaker-gender",
+    "title": "Greetings: damer & fru – Chamber 1",
+    "section": "Split by speaker gender",
+    "text": "Split by speaker gender",
+    "crumbs": [
+      "Home",
+      "Chamber 1",
+      "damer & fru"
+    ]
+  },
+  {
+    "objectID": "ToK_damer_fru.chamber1.html#split-by-party",
+    "href": "ToK_damer_fru.chamber1.html#split-by-party",
+    "title": "Greetings: damer & fru – Chamber 1",
+    "section": "Split by party",
+    "text": "Split by party",
+    "crumbs": [
+      "Home",
+      "Chamber 1",
+      "damer & fru"
+    ]
+  },
+  {
+    "objectID": "ToK_damer_fru.chamber1.html#split-by-chamber",
+    "href": "ToK_damer_fru.chamber1.html#split-by-chamber",
+    "title": "Greetings: damer & fru – Chamber 1",
+    "section": "Split by chamber",
+    "text": "Split by chamber",
+    "crumbs": [
+      "Home",
+      "Chamber 1",
+      "damer & fru"
+    ]
+  },
+  {
+    "objectID": "ToK_damer_fru.html#raw-word-counts-per-year",
+    "href": "ToK_damer_fru.html#raw-word-counts-per-year",
+    "title": "Greetings: damer & fru",
+    "section": "Raw word counts per year",
+    "text": "Raw word counts per year",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "damer & fru"
+    ]
+  },
+  {
+    "objectID": "ToK_damer_fru.html#utterances-containing-the-word-per-year",
+    "href": "ToK_damer_fru.html#utterances-containing-the-word-per-year",
+    "title": "Greetings: damer & fru",
+    "section": "Utterances containing the word per year",
+    "text": "Utterances containing the word per year",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "damer & fru"
+    ]
+  },
+  {
+    "objectID": "ToK_damer_fru.html#relative-frequency-of-utterances-containing-the-word",
+    "href": "ToK_damer_fru.html#relative-frequency-of-utterances-containing-the-word",
+    "title": "Greetings: damer & fru",
+    "section": "Relative frequency of utterances containing the word",
+    "text": "Relative frequency of utterances containing the word",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "damer & fru"
+    ]
+  },
+  {
+    "objectID": "ToK_damer_fru.html#split-by-speaker-gender",
+    "href": "ToK_damer_fru.html#split-by-speaker-gender",
+    "title": "Greetings: damer & fru",
+    "section": "Split by speaker gender",
+    "text": "Split by speaker gender",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "damer & fru"
+    ]
+  },
+  {
+    "objectID": "ToK_damer_fru.html#split-by-party",
+    "href": "ToK_damer_fru.html#split-by-party",
+    "title": "Greetings: damer & fru",
+    "section": "Split by party",
+    "text": "Split by party",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "damer & fru"
+    ]
+  },
+  {
+    "objectID": "ToK_damer_fru.html#split-by-chamber",
+    "href": "ToK_damer_fru.html#split-by-chamber",
+    "title": "Greetings: damer & fru",
+    "section": "Split by chamber",
+    "text": "Split by chamber",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "damer & fru"
+    ]
+  },
+  {
+    "objectID": "ToK_relative.chamber1.html#category-counts-per-year",
+    "href": "ToK_relative.chamber1.html#category-counts-per-year",
+    "title": "Relative utterance frequencies – Chamber 1",
+    "section": "Category counts per year",
+    "text": "Category counts per year",
+    "crumbs": [
+      "Home",
+      "Chamber 1",
       "Relative word frequencies"
+    ]
+  },
+  {
+    "objectID": "ToK_relative.chamber1.html#relative-frequencies-per-year",
+    "href": "ToK_relative.chamber1.html#relative-frequencies-per-year",
+    "title": "Relative utterance frequencies – Chamber 1",
+    "section": "Relative frequencies per year",
+    "text": "Relative frequencies per year",
+    "crumbs": [
+      "Home",
+      "Chamber 1",
+      "Relative word frequencies"
+    ]
+  },
+  {
+    "objectID": "ToK_relative.chamber1.html#split-by-gender",
+    "href": "ToK_relative.chamber1.html#split-by-gender",
+    "title": "Relative utterance frequencies – Chamber 1",
+    "section": "Split by gender",
+    "text": "Split by gender",
+    "crumbs": [
+      "Home",
+      "Chamber 1",
+      "Relative word frequencies"
+    ]
+  },
+  {
+    "objectID": "ToK_relative.chamber1.html#relative-frequencies-by-party",
+    "href": "ToK_relative.chamber1.html#relative-frequencies-by-party",
+    "title": "Relative utterance frequencies – Chamber 1",
+    "section": "Relative frequencies by party",
+    "text": "Relative frequencies by party",
+    "crumbs": [
+      "Home",
+      "Chamber 1",
+      "Relative word frequencies"
+    ]
+  },
+  {
+    "objectID": "ToK_relative.html#category-counts-per-year",
+    "href": "ToK_relative.html#category-counts-per-year",
+    "title": "Relative utterance frequencies",
+    "section": "Category counts per year",
+    "text": "Category counts per year",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Relative word frequencies"
+    ]
+  },
+  {
+    "objectID": "ToK_relative.html#relative-frequencies-per-year",
+    "href": "ToK_relative.html#relative-frequencies-per-year",
+    "title": "Relative utterance frequencies",
+    "section": "Relative frequencies per year",
+    "text": "Relative frequencies per year",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Relative word frequencies"
+    ]
+  },
+  {
+    "objectID": "ToK_relative.html#split-by-gender",
+    "href": "ToK_relative.html#split-by-gender",
+    "title": "Relative utterance frequencies",
+    "section": "Split by gender",
+    "text": "Split by gender",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Relative word frequencies"
+    ]
+  },
+  {
+    "objectID": "ToK_relative.html#relative-frequencies-by-party",
+    "href": "ToK_relative.html#relative-frequencies-by-party",
+    "title": "Relative utterance frequencies",
+    "section": "Relative frequencies by party",
+    "text": "Relative frequencies by party",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Relative word frequencies"
+    ]
+  },
+  {
+    "objectID": "ToK_speakers.chamber2.html#distinct-speakers-per-year",
+    "href": "ToK_speakers.chamber2.html#distinct-speakers-per-year",
+    "title": "Speakers – Chamber 2",
+    "section": "Distinct speakers per year",
+    "text": "Distinct speakers per year",
+    "crumbs": [
+      "Home",
+      "Chamber 2",
+      "Speakers"
+    ]
+  },
+  {
+    "objectID": "ToK_speakers.chamber2.html#distinct-speakers-by-gender",
+    "href": "ToK_speakers.chamber2.html#distinct-speakers-by-gender",
+    "title": "Speakers – Chamber 2",
+    "section": "Distinct speakers by gender",
+    "text": "Distinct speakers by gender",
+    "crumbs": [
+      "Home",
+      "Chamber 2",
+      "Speakers"
+    ]
+  },
+  {
+    "objectID": "ToK_speakers.chamber2.html#distinct-speakers-by-party",
+    "href": "ToK_speakers.chamber2.html#distinct-speakers-by-party",
+    "title": "Speakers – Chamber 2",
+    "section": "Distinct speakers by party",
+    "text": "Distinct speakers by party",
+    "crumbs": [
+      "Home",
+      "Chamber 2",
+      "Speakers"
+    ]
+  },
+  {
+    "objectID": "ToK_word_baseline.chamber1.html#absolute-totals-per-year",
+    "href": "ToK_word_baseline.chamber1.html#absolute-totals-per-year",
+    "title": "Word baseline – Chamber 1",
+    "section": "Absolute totals per year",
+    "text": "Absolute totals per year",
+    "crumbs": [
+      "Home",
+      "Chamber 1",
+      "Word baselines"
+    ]
+  },
+  {
+    "objectID": "ToK_word_baseline.chamber1.html#category-totals-per-year",
+    "href": "ToK_word_baseline.chamber1.html#category-totals-per-year",
+    "title": "Word baseline – Chamber 1",
+    "section": "Category totals per year",
+    "text": "Category totals per year",
+    "crumbs": [
+      "Home",
+      "Chamber 1",
+      "Word baselines"
+    ]
+  },
+  {
+    "objectID": "ToK_word_baseline.chamber1.html#split-by-chamber",
+    "href": "ToK_word_baseline.chamber1.html#split-by-chamber",
+    "title": "Word baseline – Chamber 1",
+    "section": "Split by chamber",
+    "text": "Split by chamber",
+    "crumbs": [
+      "Home",
+      "Chamber 1",
+      "Word baselines"
+    ]
+  },
+  {
+    "objectID": "ToK_word_baseline.html#absolute-totals-per-year",
+    "href": "ToK_word_baseline.html#absolute-totals-per-year",
+    "title": "Word baseline",
+    "section": "Absolute totals per year",
+    "text": "Absolute totals per year",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Word baselines"
+    ]
+  },
+  {
+    "objectID": "ToK_word_baseline.html#category-totals-per-year",
+    "href": "ToK_word_baseline.html#category-totals-per-year",
+    "title": "Word baseline",
+    "section": "Category totals per year",
+    "text": "Category totals per year",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Word baselines"
+    ]
+  },
+  {
+    "objectID": "ToK_word_baseline.html#split-by-chamber",
+    "href": "ToK_word_baseline.html#split-by-chamber",
+    "title": "Word baseline",
+    "section": "Split by chamber",
+    "text": "Split by chamber",
+    "crumbs": [
+      "Home",
+      "Overview",
+      "Word baselines"
+    ]
+  },
+  {
+    "objectID": "ToK_word_relative.chamber2.html#category-counts-per-year",
+    "href": "ToK_word_relative.chamber2.html#category-counts-per-year",
+    "title": "Relative word frequencies – Chamber 2",
+    "section": "Category counts per year",
+    "text": "Category counts per year",
+    "crumbs": [
+      "Home",
+      "Chamber 2",
+      "Relative word frequencies (words)"
+    ]
+  },
+  {
+    "objectID": "ToK_word_relative.chamber2.html#relative-frequencies-per-year",
+    "href": "ToK_word_relative.chamber2.html#relative-frequencies-per-year",
+    "title": "Relative word frequencies – Chamber 2",
+    "section": "Relative frequencies per year",
+    "text": "Relative frequencies per year",
+    "crumbs": [
+      "Home",
+      "Chamber 2",
+      "Relative word frequencies (words)"
+    ]
+  },
+  {
+    "objectID": "ToK_word_relative.chamber2.html#split-by-gender",
+    "href": "ToK_word_relative.chamber2.html#split-by-gender",
+    "title": "Relative word frequencies – Chamber 2",
+    "section": "Split by gender",
+    "text": "Split by gender",
+    "crumbs": [
+      "Home",
+      "Chamber 2",
+      "Relative word frequencies (words)"
+    ]
+  },
+  {
+    "objectID": "ToK_word_relative.chamber2.html#relative-frequencies-by-party",
+    "href": "ToK_word_relative.chamber2.html#relative-frequencies-by-party",
+    "title": "Relative word frequencies – Chamber 2",
+    "section": "Relative frequencies by party",
+    "text": "Relative frequencies by party",
+    "crumbs": [
+      "Home",
+      "Chamber 2",
+      "Relative word frequencies (words)"
     ]
   },
   {
