@@ -16,6 +16,10 @@ website:
         text: "Relative word frequencies"
       - href: "ToK_baseline.qmd"
         text: "Baselines"
+      - href: "ToK_word_relative.qmd"
+        text: "Relative word frequencies (words)"
+      - href: "ToK_word_baseline.qmd"
+        text: "Word baselines"
 
     right:
       - text: "About"
@@ -26,30 +30,52 @@ website:
     contents:
       - section: Overview
         contents:
-        - text: "Exploration"
+        - text: "About"
           href: index.qmd
+        - href: "ToK_speakers.qmd"
+          text: "Speakers"
         - href: "ToK_relative.qmd"
           text: "Relative word frequencies"
         - href: "ToK_baseline.qmd"
           text: "Baselines"
+        - href: "ToK_word_relative.qmd"
+          text: "Relative word frequencies (words)"
+        - href: "ToK_word_baseline.qmd"
+          text: "Word baselines"
+        - href: "ToK_damer_fru.qmd"
+          text: "damer & fru"
+        - href: "ToK_paper_figures.qmd"
+          text: "Paper figures (all plot_ functions)"
 
       - section: Chamber 1
         contents:
-        - href: ToK_exploration.chamber1.qmd
-          text: Exploration
+        - href: ToK_speakers.chamber1.qmd
+          text: Speakers
         - href: ToK_baseline.chamber1.qmd
           text: Baselines
         - href: ToK_relative.chamber1.qmd
           text: "Relative word frequencies"
+        - href: ToK_word_baseline.chamber1.qmd
+          text: "Word baselines"
+        - href: ToK_word_relative.chamber1.qmd
+          text: "Relative word frequencies (words)"
+        - href: ToK_damer_fru.chamber1.qmd
+          text: "damer & fru"
 
       - section: Chamber 2
         contents:
-        - href: ToK_exploration.chamber2.qmd
-          text: Exploration
+        - href: ToK_speakers.chamber2.qmd
+          text: Speakers
         - href: ToK_baseline.chamber2.qmd
           text: Baselines
         - href: ToK_relative.chamber2.qmd
           text: "Relative word frequencies"
+        - href: ToK_word_baseline.chamber2.qmd
+          text: "Word baselines"
+        - href: ToK_word_relative.chamber2.qmd
+          text: "Relative word frequencies (words)"
+        - href: ToK_damer_fru.chamber2.qmd
+          text: "damer & fru"
 
 
 format:

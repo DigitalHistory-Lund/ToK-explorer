@@ -1,0 +1,157 @@
+---
+title: ToK-explorer
+jupyter: tok
+execute:
+    echo: false
+authors:
+  - name: Mathias Johansson
+    email: MathiasJohansson@kultur.lu.se
+    orcid: https://orcid.org/0000-0002-3338-0551
+  - name: Ulrika Holgersson
+    orcid: https://orcid.org/0000-0002-0672-6166
+---
+
+This site accompanies the *Tal om Kvinnor* project at Lund University.
+It reports how the Swedish Riksdag spoke about women between 1900 and
+1940, using the openly published
+[Swedish Parliament Corpus](https://github.com/swerik-project/the-swedish-parliament-corpus)
+as its raw material.
+
+Each page presents one slice of that story. **Baselines** report raw
+utterance and word counts; **Relative word frequencies** report each
+category's share of the total. Every headline view is available for the
+whole period and for either chamber separately.
+
+## Terminology
+
+Three keyword categories are used throughout the site:
+
+- **kvinna 1** — a single broad wildcard `kvinn*` that matches any word
+  starting with *kvinn*.
+- **Kvinna 2** — a hand-picked list of generic feminine terms, pronouns
+  and kin relations (`dam`, `dotter*`, `flick*`, `mor`, ...).
+- **Kvinna 3** — a large list of specific and often work-related female
+  titles (`barnmorska`, `hushållerska`, `piga*`, ...).
+
+The categories are guaranteed pairwise disjoint by an automated check;
+where a name appears in more than one list a Kvinna 2 entry always wins
+over Kvinna 3. Older pages sometimes show a **kvinna all** line — that
+is the union of all three, i.e. any utterance/word matching at least
+one category. It sits above the individual category lines by
+construction.
+
+
+## Corpus figures
+
+```{python}
+from tok_preparer.src.data import read_word_frequencies
+import tok_plots
+import pandas as pd
+
+df = read_word_frequencies()
+df = df.copy()
+df["gender"] = df["gender"].fillna("unknown")
+tok_plots.configure()
+```
+
+The three heatmaps below split the corpus by chamber and by the
+speaker's recorded gender, and count both **utterances** and **words**.
+The first heatmap covers everything before 1920; the second covers the
+whole 1900–1940 window; the third covers 1920 onwards. The two blocks
+of years bracket the introduction of women's suffrage in 1919, which
+lets us see how the gendered composition of the recorded discourse
+shifts once women can vote.
+
+```{python}
+from IPython.display import Markdown, display
+
+GENDERS = ["man", "woman", "unknown"]
+CHAMBERS = [1, 2]
+COLUMNS = ["utterance_count", "total_words"]
+COLUMN_LABELS = {"utterance_count": "utterances", "total_words": "words"}
+
+
+def cell_labels():
+    return [f"Chamber {c} · {g}" for c in CHAMBERS for g in GENDERS]
+
+
+def summary_frame(subset):
+    grouped = subset.groupby(["chamber", "gender"], as_index=False)[COLUMNS].sum()
+    values = {col: [] for col in COLUMNS}
+    for c in CHAMBERS:
+        for g in GENDERS:
+            row = grouped[(grouped.chamber == c) & (grouped.gender == g)]
+            for col in COLUMNS:
+                values[col].append(int(row[col].iloc[0]) if not row.empty else 0)
+    return pd.DataFrame(
+        {"metric": [COLUMN_LABELS[c] for c in COLUMNS]}
+        | {label: [values[col][i] for col in COLUMNS] for i, label in enumerate(cell_labels())}
+    )
+
+
+def render_period(subset, title):
+    totals = subset[COLUMNS].sum()
+    display(Markdown(
+        f"**{int(totals['utterance_count']):,}** utterances · "
+        f"**{int(totals['total_words']):,}** words"
+    ))
+    frame = summary_frame(subset)
+    long = frame.melt(id_vars=["metric"], var_name="bucket", value_name="count")
+    tok_plots.heatmap(long, x="bucket", y="metric", value="count", title=title)
+    display(frame.set_index("metric"))
+```
+
+### Before 1920
+
+```{python}
+render_period(df[df.year < 1920], "Corpus composition before 1920")
+```
+
+### Full period (1900–1940)
+
+```{python}
+render_period(df, "Corpus composition 1900-1940")
+```
+
+### 1920 onwards
+
+```{python}
+render_period(df[df.year >= 1920], "Corpus composition from 1920")
+```
+
+## Data provenance
+
+The two upstream sources are pinned by SHA-256 in
+[`tok_preparer/src/download.py`](https://github.com/DigitalHistory-Lund/ToK-Preparer/blob/main/src/download.py).
+The exact commits used to render this build are reported below.
+
+```{python}
+import subprocess
+from pathlib import Path
+
+
+def git_head(repo: Path) -> str:
+    try:
+        sha = subprocess.check_output(
+            ["git", "-C", str(repo), "rev-parse", "HEAD"], text=True
+        ).strip()
+        desc = subprocess.check_output(
+            ["git", "-C", str(repo), "log", "-1", "--format=%s"], text=True
+        ).strip()
+        return f"{sha[:12]} — {desc}"
+    except Exception as exc:  # pragma: no cover
+        return f"(unable to read: {exc})"
+
+
+parent = Path().resolve()
+submodule = parent / "tok_preparer"
+
+print("Riksdagen speeches:  records_speeches v1.6.0")
+print("                     sha256: a1c1310971214d4f836b72f48503b8d86bd3ec80763738e884a02e45a8f49ebf")
+print("Riksdagen persons:   persons.sqlite   v1.2.2")
+print("                     sha256: dfc0db29039715440b53d9820873c8c163fc72b5acdd207917e58bd4869ab5fd")
+print()
+print("ToK-explorer  parent HEAD:", git_head(parent))
+print("tok_preparer  submodule HEAD:", git_head(submodule))
+```
+
